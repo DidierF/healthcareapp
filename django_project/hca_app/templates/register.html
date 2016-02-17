@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Register</title>
+</head>
+<body>
+<h1>Register</h1>
+<form id="registerForm">
+    <div>{% csrf_token %}</div>
+    {% for field in form %}
+    <div>{{ field.label_tag }} {{ field }}</div>
+    {% endfor %}
+</form>
+<input id="registerBtn" type="button" value="Register"/>
+
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/2.2.0/jquery.min.js"></script>
+{% load staticfiles %}
+<script  src="{% static 'register.js' %}"></script>
+</body>
+</html>

@@ -9,7 +9,7 @@ USER_TYPES = (
 
 # Users table
 class Doctor(models.Model):
-    doctorId = models.IntegerField(primary_key=True)
+    doctorId = models.AutoField(primary_key=True)
     username = models.CharField(max_length=50, unique=True)
     email = models.EmailField(max_length=50, unique=True)
     document = models.CharField(max_length=20, unique=True)

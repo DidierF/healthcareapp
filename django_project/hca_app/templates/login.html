@@ -5,10 +5,11 @@
     <title>Login</title>
 </head>
 <body>
-<h1>Hello World!</h1>
+<h1>Login</h1>
 <form>
-    {% csrf_token %}
-    {{ form }}
+{% for field in form %}
+<div>{{ field.label_tag }} {{ field }}</div>
+{% endfor %}
 </form>
 <input type="button" value="Login"/>
 </body>
