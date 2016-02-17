@@ -1,5 +1,5 @@
 from django.http import HttpResponse
-from django.shortcuts import render, render_to_response
+from django.shortcuts import render_to_response
 from django.template.loader import get_template
 from django.template import Context, RequestContext
 from django.views.decorators.http import require_http_methods
@@ -7,20 +7,31 @@ from .models import Doctor
 from .utils.forms import LoginForm, DoctorForm
 
 
+# Pages
+
+# Home page
 def index(request):
-    return HttpResponse(get_template('index.html').render(Context()))
+    return render_to_response('index.html',
+                              context_instance=RequestContext(request))
 
 
+# Login page
 def login(request):
-    return HttpResponse(get_template('login.html').render({'form': LoginForm()}))
+    return render_to_response('login.html',
+                              context_instance=RequestContext(request),
+                              dictionary={'form': LoginForm()})
 
 
+# Doctor register page
 def register(request):
     return render_to_response('register.html',
                               context_instance=RequestContext(request),
                               dictionary={'form': DoctorForm()})
 
 
+# API
+
+# Register new doctor
 @require_http_methods(["POST"])
 def api_register(request):
     form = request.POST
