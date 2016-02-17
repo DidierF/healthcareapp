@@ -9,6 +9,8 @@ https://docs.djangoproject.com/en/1.6/ref/settings/
 """
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
+import django
+
 import os
 BASE_DIR = os.path.dirname(os.path.dirname(__file__))
 
@@ -21,8 +23,6 @@ SECRET_KEY = 'UkV8ZgJTPM8xcgI7AJRQFdrKXgNJva9ZZOh8Vgo6OHrBJvpgTC'
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
-
-TEMPLATE_DEBUG = True
 
 ALLOWED_HOSTS = []
 
@@ -66,6 +66,26 @@ DATABASES = {
         'PORT': '',
     }
 }
+
+# Templates
+
+TEMPLATES = [
+    {
+        'BACKEND': 'django.template.backends.django.DjangoTemplates',
+        'DIRS': [],
+        'APP_DIRS': True,
+        'OPTIONS': {
+            'debug': DEBUG,
+            'context_processors': [
+                'django.template.context_processors.debug',
+                'django.template.context_processors.request',
+                'django.contrib.auth.context_processors.auth',
+                'django.contrib.messages.context_processors.messages',
+            ]
+            # ... some options here ...
+        },
+    },
+]
 
 # Internationalization
 # https://docs.djangoproject.com/en/1.6/topics/i18n/
