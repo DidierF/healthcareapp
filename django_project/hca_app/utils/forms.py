@@ -1,5 +1,6 @@
-from django.forms import Form, CharField, ModelForm
-from ..models import Doctor
+from django.contrib.auth.models import User
+from django.forms import Form, CharField, ModelForm, ChoiceField
+from .models import USER_TYPES
 
 
 class LoginForm(Form):
@@ -9,6 +10,11 @@ class LoginForm(Form):
 
 
 class DoctorForm(ModelForm):
+    document = CharField(label='Document', max_length=20)
+    cellphone = CharField(label='Cellphone', max_length=10)
+    officePhone = CharField(label='Office Phone', max_length=10)
+    userType = ChoiceField(label='User Type', choices=USER_TYPES)
+
     class Meta:
-        model = Doctor
-        fields = ['username', 'document', 'password', 'email', 'cellphone', 'userType']
+        model = User
+        fields = ['username', 'password', 'email', 'first_name', 'last_name']
