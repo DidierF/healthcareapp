@@ -1,8 +1,7 @@
+from django.contrib.auth import authenticate
 from django.contrib.auth.models import User
 from django.http import HttpResponse
-from django.shortcuts import render_to_response, render
-from django.template import RequestContext
-from django.template.loader import get_template
+from django.shortcuts import render
 from django.views.decorators.http import require_http_methods
 from .utils.models import Doctor
 from .utils.forms import LoginForm, DoctorForm
@@ -27,6 +26,16 @@ def register(request):
 
 # API
 
+# HTTP Status Codes
+HTTP_STATUS = {
+    'SUCCESS': 200,
+    'CREATED': 201,
+    'UNAUTHORIZED': 403,
+    'NOT_FOUND': 404,
+    'INTERNAL': 500
+}
+
+
 # Register new doctor
 @require_http_methods(["POST"])
 def api_register(request):
@@ -49,5 +58,14 @@ def api_register(request):
 # Login
 @require_http_methods(["POST"])
 def api_login(request):
-    # form = request.POST
-    return HttpResponse(200);
+    form = request.POST
+    user = authenticate(username=form.get('username'),
+                        password=form.get('password')
+                        )
+    # TODO: also compare 'doctor's' document
+    if user is not None:
+        print('success: ' + str(HTTP_STATUS['SUCCESS']))
+        return HttpResponse(request, HTTP_STATUS['SUCCESS'])
+    else:
+        print('unauthorized: ' + str(HTTP_STATUS['UNAUTHORIZED']))
+        return HttpResponse(request, HTTP_STATUS['UNAUTHORIZED'])

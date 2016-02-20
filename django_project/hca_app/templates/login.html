@@ -4,14 +4,21 @@
 {% endblock %}
 
 {% block content %}
+
 <h1>Login</h1>
-<form>
-{% for field in form %}
-<div>{{ field.label_tag }} {{ field }}</div>
-{% endfor %}
+
+<form id="loginForm">
+    <div>{% csrf_token %}</div>
+    {% for field in form %}
+    <div>{{ field.label_tag }} {{ field }}</div>
+    {% endfor %}
 </form>
-<input type="button" value="Login"/>
+
+<input id="loginBtn" type="button" value="Login"/>
+
 {% endblock %}
 
 {% block js %}
+{% load staticfiles %}
+<script  src="{% static 'login.js' %}"></script>
 {% endblock %}

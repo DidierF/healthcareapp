@@ -5,15 +5,14 @@ from . import views
 
 admin.autodiscover()
 
-# Examples:
-# url(r'^$', 'hca_app.views.home', name='home'),
-# url(r'^blog/', include('blog.urls')),
 urlpatterns = [
-                url(r'^$', views.index),
-                url(r'^admin/', admin.site.urls),
-                url(r'^login/$', views.login),
-                url(r'^register/$', views.register),
+    # Pages
+    url(r'^$', views.index),
+    url(r'^admin/', admin.site.urls),
+    url(r'^login/$', views.login),
+    url(r'^register/$', views.register),
 
-                # API
-                url(r'^api/v1/register$', views.api_register)
-               ]
+    # API
+    url(r'^api/v1/register$', views.api_register),
+    url(r'^api/v1/login$', views.api_login),
+]

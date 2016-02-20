@@ -1,8 +1,8 @@
-$('#registerBtn').on('click', function(){
+$('#loginBtn').on('click', function(){
     $.ajax({
-        url: '/api/v1/register',
+        url: '/api/v1/login',
         method: 'post',
-        data: $('#registerForm').serialize()
+        data: $('#loginForm').serialize()
     })
     .done(function( data, textStatus, jqXHR ) {
         console.log(data);
