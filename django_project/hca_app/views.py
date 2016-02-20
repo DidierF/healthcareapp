@@ -64,8 +64,6 @@ def api_login(request):
                         )
     # TODO: also compare 'doctor's' document
     if user is not None:
-        print('success: ' + str(HTTP_STATUS['SUCCESS']))
-        return HttpResponse(request, HTTP_STATUS['SUCCESS'])
+        return HttpResponse(request, status=HTTP_STATUS['SUCCESS'])
     else:
-        print('unauthorized: ' + str(HTTP_STATUS['UNAUTHORIZED']))
-        return HttpResponse(request, HTTP_STATUS['UNAUTHORIZED'])
+        return HttpResponse(request, status=HTTP_STATUS['UNAUTHORIZED'])
