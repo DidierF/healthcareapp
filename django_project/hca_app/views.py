@@ -1,8 +1,11 @@
-from django.contrib.auth import authenticate
+from django.contrib.auth import authenticate, login as django_login
+from django.contrib.auth.decorators import login_required
 from django.contrib.auth.models import User
-from django.http import HttpResponse
 from django.shortcuts import render
-from django.views.decorators.http import require_http_methods
+from .utils.serializers import DoctorSerializer
+from rest_framework import status
+from rest_framework.decorators import api_view
+from rest_framework.response import Response
 from .utils.models import Doctor
 from .utils.forms import LoginForm, DoctorForm
 
@@ -24,46 +27,60 @@ def register(request):
     return render(request, 'register.html', {'form': DoctorForm()})
 
 
+# Dashboard
+@login_required()
+def dashboard(request):
+    return render(request, 'dashboard.html', {'user': request.user})
+
+
 # API
 
-# HTTP Status Codes
-HTTP_STATUS = {
-    'SUCCESS': 200,
-    'CREATED': 201,
-    'UNAUTHORIZED': 403,
-    'NOT_FOUND': 404,
-    'INTERNAL': 500
-}
+# Get all registered doctors
+@api_view(['GET'])
+def api_doctors(request):
+    try:
+        doctors = Doctor.objects.all()
+    except Doctor.DoesNotExist:
+        return Response(status=status.HTTP_404_NOT_FOUND)
+
+    if request.method == 'GET':
+        serializer = DoctorSerializer(doctors, many=True)
+        return Response(serializer.data)
 
 
 # Register new doctor
-@require_http_methods(["POST"])
+@api_view(["POST"])
 def api_register(request):
     form = request.POST
     user = User.objects.create_user(username=form.get('username'),
                                     password=form.get('password'),
                                     email=form.get('email'),
                                     first_name=form.get('first_name'),
-                                    last_name=form.get('last_name')
-                                    )
+                                    last_name=form.get('last_name'))
     doc = Doctor(user=user,
                  document=form.get('document'),
                  cellphone=form.get('cellphone'),
+                 officePhone=form.get('officePhone'),
                  userType=form.get('userType', 'std'))
     user.save()
     doc.save()
-    return HttpResponse(200)
+
+    if doc.doctorId is None:
+        user.delete()
+        return Response(status=status.HTTP_400_BAD_REQUEST)
+
+    return Response(status=status.HTTP_201_CREATED)
 
 
 # Login
-@require_http_methods(["POST"])
+@api_view(["POST"])
 def api_login(request):
     form = request.POST
     user = authenticate(username=form.get('username'),
-                        password=form.get('password')
-                        )
+                        password=form.get('password'))
     # TODO: also compare 'doctor's' document
     if user is not None:
-        return HttpResponse(request, status=HTTP_STATUS['SUCCESS'])
+        django_login(request, user)
+        return Response(user.username, status.HTTP_200_OK)
     else:
-        return HttpResponse(request, status=HTTP_STATUS['UNAUTHORIZED'])
+        return Response(status.HTTP_401_UNAUTHORIZED)

@@ -5,8 +5,18 @@ $('#loginBtn').on('click', function(){
         data: $('#loginForm').serialize()
     })
     .done(function( data, textStatus, jqXHR ) {
-        console.log(data);
-        console.log(textStatus);
         console.log(jqXHR);
+        switch(jqXHR.status){
+            case 200:
+                var next = getUrlParameter('next');
+                if (next){
+                    window.location.href = next;
+                } else {
+                    window.location.href = '/dashboard/'
+                }
+                break;
+            case 401:
+                break;
+        }
     });
 });
