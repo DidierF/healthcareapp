@@ -19,4 +19,5 @@ urlpatterns = [
     url(r'^api/v1/doctors$', views.api_doctors),
     url(r'^api/v1/register$', views.api_register),
     url(r'^api/v1/login$', views.api_login),
+    url(r'^api/v1/logout$', views.api_logout),
 ]

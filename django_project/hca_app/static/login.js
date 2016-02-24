@@ -12,7 +12,7 @@ $('#loginBtn').on('click', function(){
                 if (next){
                     window.location.href = next;
                 } else {
-                    window.location.href = '/dashboard/'
+                    window.location.href = '/dashboard/';
                 }
                 break;
             case 401:

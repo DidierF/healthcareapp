@@ -1,7 +1,8 @@
-from django.contrib.auth import authenticate, login as django_login
+from django.contrib.auth import authenticate, login as django_login, logout as django_logout
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.models import User
 from django.shortcuts import render
+from django.views.decorators.csrf import csrf_exempt
 from .utils.serializers import DoctorSerializer
 from rest_framework import status
 from rest_framework.decorators import api_view
@@ -112,3 +113,11 @@ def api_login(request):
         return Response(user.username, status.HTTP_200_OK)
     else:
         return Response(status.HTTP_401_UNAUTHORIZED)
+
+
+# Logout
+@csrf_exempt
+@api_view(["GET"])
+def api_logout(request):
+    django_logout(request)
+    return Response(status=status.HTTP_200_OK)

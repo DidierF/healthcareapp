@@ -12,3 +12,12 @@ var getUrlParameter = function getUrlParameter(sParam) {
         }
     }
 };
+
+$('#logout').on('click', function(){
+    $.ajax({
+        url: '/api/v1/logout',
+        method: 'get'
+    }).done(function(){
+        window.location.href = '/';
+    });
+});
