@@ -1,0 +1,16 @@
+{% extends 'base.html' %}
+
+{% block css %}
+{% endblock %}
+
+{% block content %}
+<h1>List of registered Doctors</h1>
+
+{% for doctor in doctors %}
+<a href="/doctor/{{ doctor.doctorId }}">{{ doctor.user.username }}</a><br />
+{% endfor %}
+
+{% endblock %}
+
+{% block js %}
+{% endblock %}

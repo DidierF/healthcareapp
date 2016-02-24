@@ -12,6 +12,8 @@ urlpatterns = [
     url(r'^login/$', views.login),
     url(r'^register/$', views.register),
     url(r'^dashboard/$', views.dashboard),
+    url(r'^doctor/$', views.doctors),
+    url(r'^doctor/([0-9]+)/$', views.edit_doctor),
 
     # API
     url(r'^api/v1/doctors$', views.api_doctors),

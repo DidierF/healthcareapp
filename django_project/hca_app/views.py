@@ -23,8 +23,32 @@ def login(request):
 
 
 # Doctor register page
+@login_required()
 def register(request):
     return render(request, 'register.html', {'form': DoctorForm()})
+
+
+# Doctors page
+@login_required()
+def doctors(request):
+    return render(request, 'doctors.html', {'doctors': Doctor.objects.all()})
+
+
+# Doctor edition page
+@login_required()
+def edit_doctor(request, id):
+    doctor = Doctor.objects.get(doctorId=id)
+    form = DoctorForm(initial={
+        'username': doctor.user.username,
+        'email': doctor.user.email,
+        'first_name': doctor.user.first_name,
+        'last_name': doctor.user.last_name,
+        'document': doctor.document,
+        'cellphone': doctor.cellphone,
+        'officePhone': doctor.officePhone,
+        'userType': doctor.userType
+    })
+    return render(request, 'editDoctors.html', {'form': form})
 
 
 # Dashboard
@@ -39,12 +63,16 @@ def dashboard(request):
 @api_view(['GET'])
 def api_doctors(request):
     try:
-        doctors = Doctor.objects.all()
+        all_doctors = Doctor.objects.all()
+        for doctor in all_doctors:
+            doctor.username = doctor.user.username
+            # TODO: Add other fields
+
     except Doctor.DoesNotExist:
         return Response(status=status.HTTP_404_NOT_FOUND)
 
     if request.method == 'GET':
-        serializer = DoctorSerializer(doctors, many=True)
+        serializer = DoctorSerializer(all_doctors, many=True)
         return Response(serializer.data)
 
 

@@ -1,0 +1,17 @@
+{% extends 'base.html' %}
+
+{% block css %}
+{% endblock %}
+
+{% block content %}
+<h1>Doctor edition</h1>
+<form>
+    {% for field in form %}
+    <div>{{ field.label_tag }} {{ field }}</div>
+    {% endfor %}
+</form>
+<input id="saveBtn" type="button" value="Save"/>
+{% endblock %}
+
+{% block js %}
+{% endblock %}
