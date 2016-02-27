@@ -1,0 +1,22 @@
+{% extends 'base.html' %}
+
+{% block css %}
+{% endblock %}
+
+{% block content %}
+<h1>Edit patient</h1>
+<input id="patientId" type="hidden" value="{{ patientId }}"/>
+<form id="patientForm">
+    <div>{% csrf_token %}</div>
+    {% for field in form %}
+    <div>{{ field.label_tag }} {{ field }}</div>
+    {% endfor %}
+</form>
+<input id="saveBtn" type="button" value="Save"/>
+<input id="deleteBtn" type="button" value="Delete"/>
+{% endblock %}
+
+{% block js %}
+{% load staticfiles %}
+<script src="{% static 'editPatient.js' %}"></script>
+{% endblock %}

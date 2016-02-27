@@ -16,3 +16,16 @@ class Doctor(models.Model):
     cellphone = models.CharField(max_length=10)
     officePhone = models.CharField(max_length=10)
     userType = models.CharField(max_length=5, choices=USER_TYPES, default='std')
+
+
+# Patients
+class Patient(models.Model):
+    patientId = models.AutoField(primary_key=True)
+    firstName = models.CharField(max_length=20)
+    lastName = models.CharField(max_length=20)
+    document = models.CharField(max_length=20, unique=True)
+    email = models.CharField(max_length=50, unique=True)
+    address = models.CharField(max_length=250, null=True)
+    cellphone = models.CharField(max_length=10)
+    officePhone = models.CharField(max_length=10, null=True)
+    depends = models.IntegerField(null=True)
