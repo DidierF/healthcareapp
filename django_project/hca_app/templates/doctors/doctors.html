@@ -6,8 +6,9 @@
 {% block content %}
 <h1>List of registered Doctors</h1>
 
+<a href="/doctors/new">New Doctor</a><br />
 {% for doctor in doctors %}
-<a href="/doctor/{{ doctor.doctorId }}">{{ doctor.user.username }}</a><br />
+<a href="/doctors/{{ doctor.doctorId }}">{{ doctor.user.username }}</a><br />
 {% endfor %}
 
 {% endblock %}

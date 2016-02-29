@@ -1,6 +1,6 @@
 $('#registerBtn').on('click', function(){
     $.ajax({
-        url: '/api/v1/register',
+        url: '/api/v1/doctors/',
         method: 'post',
         data: $('#registerForm').serialize()
     })

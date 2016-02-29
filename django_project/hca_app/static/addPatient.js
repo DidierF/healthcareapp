@@ -11,7 +11,7 @@ $('#saveBtn').on('click', function(){
         console.log(jqXHR);
         switch(jqXHR.status){
             case 201:
-                window.location.href = '/patient/'
+                window.location.href = '/patients/'
                 break;
             case 400:
                 break;

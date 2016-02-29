@@ -4,14 +4,19 @@
 {% endblock %}
 
 {% block content %}
-<h1>Doctor edition</h1>
-<form>
+<h1>Edit doctor</h1>
+<input id="doctorId" type="hidden" value="{{ doctorId }}"/>
+<form id="doctorForm">
+    <div>{% csrf_token %}</div>
     {% for field in form %}
     <div>{{ field.label_tag }} {{ field }}</div>
     {% endfor %}
 </form>
 <input id="saveBtn" type="button" value="Save"/>
+<input id="deleteBtn" type="button" value="Delete"/>
 {% endblock %}
 
 {% block js %}
+{% load staticfiles %}
+<script src="{% static 'editDoctor.js' %}"></script>
 {% endblock %}
