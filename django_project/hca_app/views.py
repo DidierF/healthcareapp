@@ -56,7 +56,7 @@ def doctors_view(request, doctor_id, new):
 @login_required()
 def patients_view(request, patient_id, new):
     if new:
-        return render(request, 'addPatient.html', {'form': PatientForm()})
+        return render(request, 'patients/addPatient.html', {'form': PatientForm()})
 
     elif patient_id:
         patient = Patient.objects.get(patientId=patient_id)
@@ -69,10 +69,10 @@ def patients_view(request, patient_id, new):
             'officePhone': patient.officePhone,
             'address': patient.address
         })
-        return render(request, 'editPatient.html', {'form': form, 'patientId': patient_id})
+        return render(request, 'patients/editPatient.html', {'form': form, 'patientId': patient_id})
 
     else:
-        return render(request, 'patients.html', {'patients': Patient.objects.all()})
+        return render(request, 'patients/patients.html', {'patients': Patient.objects.all()})
 
 
 # API
