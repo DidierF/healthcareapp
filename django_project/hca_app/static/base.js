@@ -16,7 +16,10 @@ var getUrlParameter = function getUrlParameter(sParam) {
 $('#logout').on('click', function(){
     $.ajax({
         url: '/api/v1/logout',
-        method: 'get'
+        method: 'post',
+        beforeSend: function(jqXHR){
+            jqXHR.setRequestHeader('X-CSRFToken',$('#logoutToken').val());
+        }
     }).done(function(){
         window.location.href = '/';
     });

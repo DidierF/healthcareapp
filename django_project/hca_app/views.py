@@ -2,7 +2,6 @@ from django.contrib.auth import authenticate, login as django_login, logout as d
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.models import User
 from django.shortcuts import render
-from django.views.decorators.csrf import csrf_exempt
 from rest_framework import status
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
@@ -93,9 +92,7 @@ def api_login(request):
 
 
 # Logout
-# TODO: change to post method
-@csrf_exempt
-@api_view(['GET'])
+@api_view(['POST'])
 def api_logout(request):
     django_logout(request)
     return Response(status=status.HTTP_200_OK)
