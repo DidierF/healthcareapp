@@ -24,3 +24,19 @@ class PatientForm(ModelForm):
     class Meta:
         model = models.Patient
         fields = ['firstName', 'lastName', 'document', 'email', 'address', 'cellphone', 'officePhone']
+
+
+class AppointmentForm(ModelForm):
+    patient = ChoiceField(choices=[
+        (pat.patientId, pat.firstName + ' ' + pat.lastName) for pat in models.Patient.objects.all()
+        ])
+    doctor = ChoiceField(choices=[
+        (doc.doctorId, doc.user.first_name + ' ' + doc.user.last_name) for doc in models.Doctor.objects.all()
+    ])
+
+    class Meta:
+        model = models.Appointment
+        fields = ['patient', 'doctor', 'date']
+        # widgets = {
+        #     'patient': Select()
+        # }

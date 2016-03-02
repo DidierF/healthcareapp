@@ -18,3 +18,8 @@ class DoctorSerializer(serializers.ModelSerializer):
 class PatientSerializer(serializers.ModelSerializer):
     class Meta:
         model = models.Patient
+
+
+class AppointmentSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = models.Appointment
