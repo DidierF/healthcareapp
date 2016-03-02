@@ -5,9 +5,9 @@ from django.shortcuts import render
 from rest_framework import status
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
-from .utils.forms import LoginForm, DoctorForm, PatientForm
-from .utils.models import Doctor, Patient
-from .utils.serializers import DoctorSerializer, PatientSerializer
+from .forms import LoginForm, DoctorForm, PatientForm
+from .models import Doctor, Patient
+from .serializers import DoctorSerializer, PatientSerializer
 
 
 # Pages
