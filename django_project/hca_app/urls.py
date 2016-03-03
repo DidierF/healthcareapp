@@ -13,10 +13,12 @@ urlpatterns = [
     url(r'^dashboard/$', views.dashboard_view),
     url(r'^doctors/([0-9]*/?|(new/?))$', views.doctors_view),
     url(r'^patients/([0-9]*/?|(new/?))$', views.patients_view),
+    url(r'^appointments/([0-9]*/?|(new/?))$', views.appointments_view),
 
     # API
     url(r'^api/v1/login$', views.api_login),
     url(r'^api/v1/logout$', views.api_logout),
     url(r'^api/v1/doctors/([0-9]*)$', views.api_doctors),
     url(r'^api/v1/patients/([0-9]*)$', views.api_patient),
+    url(r'^api/v1/appointments/([0-9]*)$', views.api_appointment),
 ]

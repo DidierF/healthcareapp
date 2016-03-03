@@ -29,3 +29,9 @@ class Patient(models.Model):
     cellphone = models.CharField(max_length=10)
     officePhone = models.CharField(max_length=10, null=True)
     depends = models.IntegerField(null=True)
+
+
+class Appointment(models.Model):
+    date = models.DateField()
+    doctor = models.ForeignKey(Doctor, on_delete=models.CASCADE)
+    patient = models.ForeignKey(Patient, on_delete=models.CASCADE)
