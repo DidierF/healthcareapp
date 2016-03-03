@@ -1,0 +1,22 @@
+{% extends 'base.html' %}
+
+{% block css %}
+{% endblock %}
+
+{% block content %}
+<h1>Edit appointment</h1>
+<input id="appointmentId" type="hidden" value="{{ appointment_id }}"/>
+<form id="appointmentForm">
+    <div>{% csrf_token %}</div>
+    {% for field in form %}
+    <div>{{ field.label_tag }} {{ field }}</div>
+    {% endfor %}
+</form>
+<input id="saveBtn" type="button" value="Save"/>
+<input id="deleteBtn" type="button" value="Delete"/>
+{% endblock %}
+
+{% block js %}
+{% load staticfiles %}
+<script src="{% static 'editAppointment.js' %}"></script>
+{% endblock %}
