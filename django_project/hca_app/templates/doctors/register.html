@@ -1,17 +1,14 @@
 {% extends 'base.html' %}
+{% load crispy_forms_tags %}
 
 {% block css %}
 {% endblock %}
 
 {% block content %}
 <h1>Register</h1>
-<form id="registerForm">
-    <div>{% csrf_token %}</div>
-    {% for field in form %}
-    <div>{{ field.label_tag }} {{ field }}</div>
-    {% endfor %}
+<form id="registerForm">{% csrf_token %}
+  {% crispy form %}
 </form>
-<input id="registerBtn" type="button" value="Register"/>
 {% endblock %}
 
 {% block js %}

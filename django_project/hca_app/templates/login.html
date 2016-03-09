@@ -1,20 +1,22 @@
 {% extends 'base.html' %}
-
-{% block css %}
-{% endblock %}
+{% load crispy_forms_tags %}
 
 {% block content %}
 
-<h1>Login</h1>
 
- <form id="loginForm">
-    <div>{% csrf_token %}</div>
-    {% for field in form %}
+
+<div class="row">
+ 	<form id="loginForm" class="form-signin">{% csrf_token %}
+ 		<h2 class="form-signin-heading">Please sign-in</h1>
+    {% crispy form %}
+ 	 <!--   {% for field in form %}
     <div>{{ field.label_tag }} {{ field }}</div>
-    {% endfor %}
-</form>
+    {% endfor %} -->
 
-<input id="loginBtn" type="button" value="Login"/>
+	</form>
+</div>
+
+
 
 {% endblock %}
 
