@@ -12,7 +12,7 @@ class UserSerializer(serializers.ModelSerializer):
 class DoctorSerializer(serializers.ModelSerializer):
     class Meta:
         model = models.Doctor
-        fields = ('user', 'doctorId', 'document', 'cellphone', 'officePhone', 'userType')
+        fields = ('user', 'id', 'document', 'cellphone', 'office_phone', 'user_type')
 
 
 class PatientSerializer(serializers.ModelSerializer):
@@ -20,6 +20,16 @@ class PatientSerializer(serializers.ModelSerializer):
         model = models.Patient
 
 
+class CustomFieldSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = models.CustomField
+
+
 class AppointmentSerializer(serializers.ModelSerializer):
     class Meta:
         model = models.Appointment
+
+
+class PrescriptionSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = models.Prescription

@@ -20,9 +20,9 @@ class LoginForm(Form):
 class DoctorForm(ModelForm):
     document = CharField(label='Document', max_length=20)
     cellphone = CharField(label='Cellphone', max_length=10)
-    officePhone = CharField(label='Office Phone', max_length=10)
-    userType = ChoiceField(label='User Type', choices=models.USER_TYPES)
-    
+    office_phone = CharField(label='Office Phone', max_length=10)
+    user_type = ChoiceField(label='User Type', choices=models.USER_TYPES)
+
     class Meta:
         model = User
         fields = ['username', 'password', 'email', 'first_name', 'last_name']
@@ -31,20 +31,24 @@ class DoctorForm(ModelForm):
 class PatientForm(ModelForm):
     class Meta:
         model = models.Patient
-        fields = ['firstName', 'lastName', 'document', 'email', 'address', 'cellphone', 'officePhone']
+        fields = ['first_name', 'last_name', 'email', 'address', 'cellphone', 'office_phone']
 
 
 class AppointmentForm(ModelForm):
     patient = ChoiceField(choices=[
-        (pat.patientId, pat.firstName + ' ' + pat.lastName) for pat in models.Patient.objects.all()
+        (pat.id, pat.first_name + ' ' + pat.last_name) for pat in models.Patient.objects.all()
         ])
     doctor = ChoiceField(choices=[
-        (doc.doctorId, doc.user.first_name + ' ' + doc.user.last_name) for doc in models.Doctor.objects.all()
+        (doc.id, doc.user.first_name + ' ' + doc.user.last_name) for doc in models.Doctor.objects.all()
     ])
 
     class Meta:
         model = models.Appointment
-        fields = ['patient', 'doctor', 'date']
-        # widgets = {
-        #     'patient': Select()
-        # }
+        fields = '__all__'
+
+
+class PrescriptionForm(ModelForm):
+    class Meta:
+        model = models.Prescription
+        fields = '__all__'
+
