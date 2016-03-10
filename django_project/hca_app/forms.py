@@ -22,7 +22,13 @@ class DoctorForm(ModelForm):
     cellphone = CharField(label='Cellphone', max_length=10)
     officePhone = CharField(label='Office Phone', max_length=10)
     userType = ChoiceField(label='User Type', choices=models.USER_TYPES)
-    
+
+
+    helper = FormHelper()
+    helper.form_methold = 'POST'
+    helper.from_class = 'registerForm'
+    helper.add_input(Submit('registerBtn', 'Register', css_class='btn btn-primary btn btn-lg btn-primary btn-bloc'))
+
     class Meta:
         model = User
         fields = ['username', 'password', 'email', 'first_name', 'last_name']
