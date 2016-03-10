@@ -20,6 +20,15 @@ class LoginForm(Form):
 class DoctorForm(ModelForm):
     document = CharField(label='Document', max_length=20)
     cellphone = CharField(label='Cellphone', max_length=10)
+    officePhone = CharField(label='Office Phone', max_length=10)
+    userType = ChoiceField(label='User Type', choices=models.USER_TYPES)
+
+
+    helper = FormHelper()
+    helper.form_methold = 'POST'
+    helper.from_class = 'registerForm'
+    helper.add_input(Submit('registerBtn', 'Register', css_class='btn btn-primary btn btn-lg btn-primary btn-bloc'))
+
     office_phone = CharField(label='Office Phone', max_length=10)
     user_type = ChoiceField(label='User Type', choices=models.USER_TYPES)
 
