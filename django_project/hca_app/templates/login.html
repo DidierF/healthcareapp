@@ -6,13 +6,10 @@
 
 
 <div class="row">
- 	<form id="loginForm" class="form-signin">{% csrf_token %}
- 		<h2 class="form-signin-heading">Please sign-in</h1>
-    {% crispy form %}
- 	 <!--   {% for field in form %}
-    <div>{{ field.label_tag }} {{ field }}</div>
-    {% endfor %} -->
-
+ 	<form id="loginForm" class="form-signin">
+		{% csrf_token %}
+ 		<h2 class="form-signin-heading">Please sign-in</h2>
+		{% crispy form %}
 	</form>
 </div>
 

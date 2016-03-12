@@ -1,36 +1,31 @@
-from django.contrib.auth.models import User
-# from django.forms import Form, CharField, ModelForm, ChoiceField
-from django import forms
-from django.forms import Form, CharField, ModelForm, ChoiceField
 from crispy_forms.helper import FormHelper
-from crispy_forms.layout import Button
+from crispy_forms.layout import Submit, Button
+from django.contrib.auth.models import User
+from django.forms import Form, CharField, ModelForm, ChoiceField, PasswordInput
 from . import models
 
 
 class LoginForm(Form):
     username = CharField(label='Username', required=True, max_length=50)
     document = CharField(label='Document', required=True, max_length=20)
-    password = CharField(label='Password', required=True, max_length=50, widget=forms.PasswordInput)
+    password = CharField(label='Password', required=True, max_length=50, widget=PasswordInput)
 
     helper = FormHelper()
-    helper.form_methold = 'POST'
+    helper.form_method = 'POST'
     helper.from_class = 'loginForm'
     helper.add_input(Button('loginBtn', 'Login', css_class='btn btn-primary btn btn-lg btn-primary btn-bloc'))
+
 
 class DoctorForm(ModelForm):
     document = CharField(label='Document', max_length=20)
     cellphone = CharField(label='Cellphone', max_length=10)
-    officePhone = CharField(label='Office Phone', max_length=10)
-    userType = ChoiceField(label='User Type', choices=models.USER_TYPES)
-
-
-    helper = FormHelper()
-    helper.form_methold = 'POST'
-    helper.from_class = 'registerForm'
-    helper.add_input(Submit('registerBtn', 'Register', css_class='btn btn-primary btn btn-lg btn-primary btn-bloc'))
-
     office_phone = CharField(label='Office Phone', max_length=10)
     user_type = ChoiceField(label='User Type', choices=models.USER_TYPES)
+
+    helper = FormHelper()
+    helper.form_method = 'POST'
+    helper.from_class = 'registerForm'
+    helper.add_input(Submit('registerBtn', 'Register', css_class='btn btn-primary btn btn-lg btn-primary btn-bloc'))
 
     class Meta:
         model = User
@@ -60,4 +55,3 @@ class PrescriptionForm(ModelForm):
     class Meta:
         model = models.Prescription
         fields = '__all__'
-
