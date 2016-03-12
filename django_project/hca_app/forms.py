@@ -3,7 +3,7 @@ from django.contrib.auth.models import User
 from django import forms
 from django.forms import Form, CharField, ModelForm, ChoiceField
 from crispy_forms.helper import FormHelper
-from crispy_forms.layout import Submit
+from crispy_forms.layout import Button
 from . import models
 
 
@@ -15,7 +15,7 @@ class LoginForm(Form):
     helper = FormHelper()
     helper.form_methold = 'POST'
     helper.from_class = 'loginForm'
-    helper.add_input(Submit('loginBtn', 'Login', css_class='btn btn-primary btn btn-lg btn-primary btn-bloc'))
+    helper.add_input(Button('loginBtn', 'Login', css_class='btn btn-primary btn btn-lg btn-primary btn-bloc'))
 
 class DoctorForm(ModelForm):
     document = CharField(label='Document', max_length=20)
