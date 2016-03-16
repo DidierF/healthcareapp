@@ -37,6 +37,7 @@ class Patient(models.Model):
     other = models.CharField(max_length=200, null=True)
 
 
+# TODO: Change name to 'CustomPatientField'
 class CustomField(models.Model):
     patient = models.ForeignKey(Patient, on_delete=models.CASCADE)
     title = models.CharField(max_length=50)
@@ -55,3 +56,18 @@ class Prescription(models.Model):
     appointment = models.ForeignKey(Appointment, on_delete=models.CASCADE)
     treatment = models.CharField(max_length=100)
     dosage = models.CharField(max_length=250)
+
+
+class BasicConsultationFormModel(models.Model):
+    patient = models.ForeignKey(Patient, on_delete=models.CASCADE)
+    appointment = models.ForeignKey(Appointment, on_delete=models.CASCADE)
+    notes = models.CharField(max_length=1000, null=True)
+
+
+class OphthalmologyFormModel(BasicConsultationFormModel):
+    glasses_right = models.CharField(max_length=20, null=True)
+    glasses_left = models.CharField(max_length=20, null=True)
+    pupils_right = models.CharField(max_length=20, null=True)
+    pupils_left = models.CharField(max_length=20, null=True)
+    refraction_right = models.CharField(max_length=20, null=True)
+    refraction_left = models.CharField(max_length=20, null=True)
