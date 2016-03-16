@@ -55,3 +55,15 @@ class PrescriptionForm(ModelForm):
     class Meta:
         model = models.Prescription
         fields = '__all__'
+
+
+class OphthalmologyForm(ModelForm):
+    helper = FormHelper()
+    helper.form_method = 'POST'
+    helper.from_class = 'ophthalmologyForm'
+    helper.add_input(Button('submitBtn', 'Save',
+                            css_class='btn btn-primary btn btn-lg btn-primary btn-bloc'))
+
+    class Meta:
+        model = models.OphthalmologyFormModel
+        fields = '__all__'

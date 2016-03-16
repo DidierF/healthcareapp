@@ -90,6 +90,12 @@ def appointments_view(request, appointment_id, new):
         return render(request, 'appointments/appointments.html', {'appointments': models.Appointment.objects.all()})
 
 
+@login_required()
+def medic_form_view(request, form_type):
+    if form_type == 'ophthalmology':
+        return render(request, 'medic_forms/ophthalmology.html', {'form': forms.OphthalmologyForm()})
+
+
 # API
 
 # Login

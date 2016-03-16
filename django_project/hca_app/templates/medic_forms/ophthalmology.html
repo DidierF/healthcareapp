@@ -1,0 +1,15 @@
+{% extends 'base.html' %}
+{% load crispy_forms_tags %}
+
+{% block css %}
+{% endblock %}
+
+{% block content %}
+
+<div class="row">
+        {% csrf_token %}
+        <h2 class=""></h2>
+        {% crispy form %}
+</div>
+
+{% endblock %}
