@@ -20,10 +20,9 @@ $('#saveBtn').on('click', function(){
 });
 
 
-$(function() {
-    $( "#id_date_of_birth" ).datepicker({
-        minDate: "-100Y",
-        changeMonth: true,
-        changeYear: true
-    });
+$( "#id_date_of_birth" ).datepicker({
+    dateFormat: "dd/mm/yy",
+    minDate: "-100Y",
+    changeMonth: true,
+    changeYear: true
 });
