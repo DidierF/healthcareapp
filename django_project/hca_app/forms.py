@@ -33,9 +33,15 @@ class DoctorForm(ModelForm):
 
 
 class PatientForm(ModelForm):
+    helper = FormHelper()
+    # helper.form_method = 'POST'
+    helper.from_class = 'patientForm'
+    helper.add_input(Button('saveBtn', 'Save',
+                            css_class='btn btn-primary btn btn-lg btn-primary btn-bloc'))
+
     class Meta:
         model = models.Patient
-        fields = ['first_name', 'last_name', 'email', 'address', 'cellphone', 'office_phone']
+        fields = '__all__'  # ['first_name', 'last_name', 'email', 'address', 'cellphone', 'office_phone']
 
 
 class AppointmentForm(ModelForm):
