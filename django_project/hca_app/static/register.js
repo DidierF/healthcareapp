@@ -1,4 +1,5 @@
-$('#submit-id-registerbtn').on('click', function(){
+$('#button-id-registerbtn').on('click', function(){
+    console.log('register');
     $.ajax({
         url: '/api/v1/doctors/',
         method: 'post',

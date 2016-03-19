@@ -1,8 +1,11 @@
-$('#saveBtn').on('click', function(){
+$('#button-id-savebtn').on('click', function(){
     $.ajax({
         url: '/api/v1/patients/',
         method: 'post',
-        data: $('#patientForm').serialize()
+        data: $('#patientForm').serialize(),
+//        beforeSend: function(jqXHR){
+//            jqXHR.setRequestHeader('X-CSRFToken',$('input[name="csrfmiddlewaretoken"]').val());
+//        }
     })
     .done(function(data, textStatus, jqXHR) {
 //        TODO: return patient id to redirect to its edition page
@@ -21,7 +24,7 @@ $('#saveBtn').on('click', function(){
 
 
 $( "#id_date_of_birth" ).datepicker({
-    dateFormat: "dd/mm/yy",
+    dateFormat: "yy-mm-dd",
     minDate: "-100Y",
     changeMonth: true,
     changeYear: true

@@ -7,7 +7,7 @@ admin.autodiscover()
 
 urlpatterns = [
     # Pages
-    url(r'^$', views.index_view),
+    url(r'^$', views.login_view),
     url(r'^admin/', admin.site.urls),
     url(r'^login/$', views.login_view),
     url(r'^dashboard/$', views.dashboard_view),
@@ -15,7 +15,7 @@ urlpatterns = [
     url(r'^patients/([0-9]*/?|(new/?))$', views.patients_view),
     url(r'^appointments/([0-9]*/?|(new/?))$', views.appointments_view),
     # url(r'^prescriptions/([0-9]*/?|(new/?))$', views.prescriptions_view),
-    url(r'^medic_forms/([a-zA-Z]*)/$', views.medic_form_view),
+    url(r'^medic_forms/([a-zA-Z]*/?)$', views.medic_form_view),
 
     # API
     url(r'^api/v1/login$', views.api_login),

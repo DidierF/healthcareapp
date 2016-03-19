@@ -8,8 +8,10 @@
 {% block content %}
 
 <h1>New patient</h1>
-<div>{% csrf_token %}</div>
-{% crispy form %}
+<form id="patientForm">
+    <div>{% csrf_token %}</div>
+    {% crispy form %}
+</form>
 
 {% endblock %}
 

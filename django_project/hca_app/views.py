@@ -34,16 +34,7 @@ def doctors_view(request, doctor_id, new):
 
     elif doctor_id:
         doctor = models.Doctor.objects.get(id=doctor_id)
-        form = forms.DoctorForm(initial={
-            'username': doctor.user.username,
-            'email': doctor.user.email,
-            'first_name': doctor.user.first_name,
-            'last_name': doctor.user.last_name,
-            'document': doctor.document,
-            'cellphone': doctor.cellphone,
-            'office_phone': doctor.office_phone,
-            'userType': doctor.userType
-        })
+        form = forms.DoctorForm(instance=doctor)
         return render(request, 'doctors/editDoctor.html', {'form': form, 'doctorId': doctor_id})
 
     else:
@@ -57,16 +48,8 @@ def patients_view(request, patient_id, new):
 
     elif patient_id:
         patient = models.Patient.objects.get(id=patient_id)
-        form = forms.PatientForm(initial={
-            'first_name': patient.first_name,
-            'last_name': patient.last_name,
-            'email': patient.email,
-            # 'document': patient.document,
-            'cellphone': patient.cellphone,
-            'office_phone': patient.office_phone,
-            'address': patient.address
-        })
-        return render(request, 'editPatient.html', {'form': form, 'patientId': patient_id})
+        form = forms.PatientForm(instance=patient)
+        return render(request, 'patients/editPatient.html', {'form': form, 'patientId': patient_id})
 
     else:
         return render(request, 'patients/patients.html', {'patients': models.Patient.objects.all()})
@@ -92,7 +75,10 @@ def appointments_view(request, appointment_id, new):
 
 @login_required()
 def medic_form_view(request, form_type):
-    if form_type == 'ophthalmology':
+    if not form_type:
+        return render(request, 'medic_forms/medic_forms.html')
+
+    elif form_type == 'ophthalmology':
         return render(request, 'medic_forms/ophthalmology.html', {'form': forms.OphthalmologyForm()})
 
 
@@ -133,7 +119,7 @@ def api_doctors(request, doctor_id):
                             document=form.get('document'),
                             cellphone=form.get('cellphone'),
                             office_phone=form.get('office_phone'),
-                            userType=form.get('userType', 'std'))
+                            user_type=form.get('user_type', 'std'))
         user.save()
         doc.save()
 
@@ -177,7 +163,7 @@ def api_doctors(request, doctor_id):
                 doctor.document = form.get('document')
                 doctor.cellphone = form.get('cellphone')
                 doctor.office_phone = form.get('office_phone')
-                doctor.userType = form.get('userType')
+                doctor.userType = form.get('user_type')
 
                 user.save()
                 doctor.save()
@@ -210,6 +196,8 @@ def api_patient(request, patient_id):
         patient = models.Patient(
             first_name=form.get('first_name'),
             last_name=form.get('last_name'),
+            date_of_birth=form.get('date_of_birth'),
+            gender=form.get('gender'),
             email=form.get('email'),
             address=form.get('address'),
             cellphone=form.get('cellphone'),
