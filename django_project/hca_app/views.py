@@ -34,7 +34,12 @@ def doctors_view(request, doctor_id, new):
 
     elif doctor_id:
         doctor = models.Doctor.objects.get(id=doctor_id)
-        form = forms.DoctorForm(instance=doctor)
+        form = forms.DoctorForm(instance=doctor.user, initial={
+            'document': doctor.document,
+            'cellphone': doctor.cellphone,
+            'office_phone': doctor.office_phone,
+            'user_type': doctor.user_type
+        })
         return render(request, 'doctors/editDoctor.html', {'form': form, 'doctorId': doctor_id})
 
     else:

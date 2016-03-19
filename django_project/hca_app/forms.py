@@ -1,7 +1,7 @@
 from crispy_forms.helper import FormHelper
 from crispy_forms.layout import Button
 from django.contrib.auth.models import User
-from django.forms import Form, CharField, ModelForm, ChoiceField, PasswordInput, DateField
+from django.forms import Form, CharField, ModelForm, ChoiceField, PasswordInput
 from . import models
 
 
@@ -13,7 +13,7 @@ class LoginForm(Form):
     helper = FormHelper()
     helper.form_method = 'POST'
     helper.from_class = 'loginForm'
-    helper.add_input(Button('loginBtn', 'Login', css_class='btn btn-primary btn btn-lg btn-primary btn-bloc'))
+    helper.add_input(Button('loginBtn', 'Login', css_class='btn btn-primary btn-lg btn-bloc'))
 
 
 class DoctorForm(ModelForm):
@@ -24,8 +24,8 @@ class DoctorForm(ModelForm):
 
     helper = FormHelper()
     helper.form_method = 'POST'
-    helper.from_class = 'registerForm'
-    helper.add_input(Button('registerBtn', 'Register', css_class='btn btn-primary btn btn-lg btn-primary btn-bloc'))
+    helper.from_class = 'doctorForm'
+    helper.add_input(Button('saveBtn', 'Save', css_class='btn btn-primary btn-lg btn-bloc'))
 
     class Meta:
         model = User
@@ -33,14 +33,10 @@ class DoctorForm(ModelForm):
 
 
 class PatientForm(ModelForm):
-
-    birth_date = DateField()
-
     helper = FormHelper()
     helper.form_method = 'POST'
     helper.from_class = 'patientForm'
-    helper.add_input(Button('saveBtn', 'Save',
-                            css_class='btn btn-primary btn btn-lg btn-primary btn-bloc'))
+    helper.add_input(Button('saveBtn', 'Save', css_class='btn btn-primary btn-lg btn-bloc'))
 
     class Meta:
         model = models.Patient
