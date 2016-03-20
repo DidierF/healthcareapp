@@ -22,7 +22,7 @@
           </ul>
         </div>
         <div class="col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 main">
- 			{% if user.is_authenticated %} <h1 class="page-header">Hello, {{ user.username }}.</h1>{% endif %}
+ 			{% if user.is_authenticated %} <h1 class="page-header">Hello, {{ user.first_name }}.</h1>{% endif %}
         	
           <div class="row placeholders">
             <div class="col-xs-6 col-sm-3 placeholder">

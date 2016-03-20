@@ -21,17 +21,6 @@
 	 <!-- FormValidation CSS file -->
 	<link rel="stylesheet" href="http://formvalidation.io/vendor/formvalidation/css/formValidation.min.css">
 
-	<!-- jQuery v1.9.1 or higher -->
-	<script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.11.2/jquery.min.js"></script>
-
-	<!-- Bootstrap JS -->
-	<script src="http://cdn.jsdelivr.net/bootstrap/3.3.2/js/bootstrap.min.js"></script>
-
-	<!-- FormValidation plugin and the class supports validating Bootstrap form -->
-	<script src="http://formvalidation.io/vendor/formvalidation/js/formValidation.min.js"></script>
-	<script src="http://formvalidation.io/vendor/formvalidation/js/framework/bootstrap.min.js"></script>
-
-
     <meta charset="UTF-8">
     <title>Health Care App</title>
     {% block css %}
@@ -51,29 +40,27 @@
           	</div>
           		<div id="navbar" class="navbar-collapse collapse">
           			<ul class="nav navbar-nav">
-					{% if user.is_authenticated %}
-						<li><a id="logout" href="#">Logout</a></li>
-						<input type="hidden" id="logoutToken" value="{{ csrf_token }}"/>
-					{% else %}
-						<li><a href="/login">Login</a></li>
-						{% endif %}
-						<li><a href="/dashboard/">Dashboard</a></li>
-						<li><a href="/doctors/new/">Register</a></li>
-						<li><a href="/doctors/">Doctors</a></li>
-						<li><a href="/patients/">Patients</a></li>
+                        {% if user.is_authenticated %}
+                            <li><a id="logout" href="#">Logout</a></li>
+                            <input type="hidden" id="logoutToken" value="{{ csrf_token }}"/>
+                        {% else %}
+                            <li><a href="/login">Login</a></li>
+                        {% endif %}
+                        <li><a href="/dashboard/">Dashboard</a></li>
+                        <li><a href="/doctors/new/">Register</a></li>
+                        <li><a href="/doctors/">Doctors</a></li>
+                        <li><a href="/patients/">Patients</a></li>
+                        <li><a href="/appointments/">Appointments</a></li>
 					</ul>
 				</div>
 			</div>
 		</div>
 	</nav>
 	<div class="container">
-	{% block content %}
-	{% endblock %}
+        {% block content %}
+        {% endblock %}
 	</div>
 	<script src="https://ajax.googleapis.com/ajax/libs/jquery/2.2.0/jquery.min.js"></script>
-
-	<!-- jQuery v1.9.1 or higher -->
-	<script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.11.2/jquery.min.js"></script>
 
 	<!-- Bootstrap JS -->
 	<script src="http://cdn.jsdelivr.net/bootstrap/3.3.2/js/bootstrap.min.js"></script>
