@@ -41,3 +41,10 @@ $('#deleteBtn').on('click', function(){
         }
     });
 });
+
+$( "#id_date_of_birth" ).datepicker({
+    dateFormat: "yy-mm-dd",
+    minDate: "-100Y",
+    changeMonth: true,
+    changeYear: true
+});
