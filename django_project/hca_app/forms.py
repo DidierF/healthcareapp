@@ -51,6 +51,11 @@ class AppointmentForm(ModelForm):
         (doc.id, doc.user.first_name + ' ' + doc.user.last_name) for doc in models.Doctor.objects.all()
     ])
 
+    helper = FormHelper()
+    helper.form_method = 'POST'
+    helper.from_class = 'appointmentForm'
+    helper.add_input(Button('saveBtn', 'Save', css_class='btn btn-primary btn-lg btn-bloc'))
+
     class Meta:
         model = models.Appointment
         fields = '__all__'

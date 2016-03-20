@@ -1,4 +1,4 @@
-$('#saveBtn').on('click', function(){
+$('#button-id-savebtn').on('click', function(){
     $.ajax({
         url: '/api/v1/appointments/',
         method: 'post',
@@ -17,4 +17,11 @@ $('#saveBtn').on('click', function(){
                 break;
         }
     });
+});
+
+$( "#id_date" ).datepicker({
+    dateFormat: "yy-mm-dd",
+    minDate: "-100Y",
+    changeMonth: true,
+    changeYear: true
 });

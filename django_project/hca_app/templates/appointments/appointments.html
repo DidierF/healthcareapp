@@ -9,7 +9,7 @@
 <a href="/appointments/new">New Appointment</a><br />
 {% for appointment in appointments %}
 <a href="/appointments/{{ appointment.id }}">
-    {{ appointment.patient.firstName }} {{ appointment.patient.lastName }}
+    {{appointment.date }} - {{ appointment.patient.first_name }} {{ appointment.patient.last_name }}
 </a><br />
 {% endfor %}
 

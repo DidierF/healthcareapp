@@ -7,6 +7,13 @@ USER_TYPES = (
     ('admin', 'Administrator')
 )
 
+APPOINTMENT_STATUS = (
+    ('active', 'Active'),
+    ('cancel', 'Cancelled'),
+    ('priority', 'Priority'),
+    ('results', 'Results')
+)
+
 
 # Users table
 class Doctor(models.Model):
@@ -48,7 +55,7 @@ class Appointment(models.Model):
     patient = models.ForeignKey(Patient, on_delete=models.CASCADE)
     doctor = models.ForeignKey(Doctor, on_delete=models.CASCADE)
     date = models.DateField()
-    status = models.CharField(max_length=10)
+    status = models.CharField(max_length=10, choices=APPOINTMENT_STATUS, default='active')
     note = models.CharField(max_length=500, null=True)
 
 

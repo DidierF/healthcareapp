@@ -67,11 +67,7 @@ def appointments_view(request, appointment_id, new):
 
     elif appointment_id:
         appointment = models.Appointment.objects.get(id=appointment_id)
-        form = forms.AppointmentForm({
-            'doctor': appointment.doctor.id,
-            'patient': appointment.patient.id,
-            'date': appointment.date
-        })
+        form = forms.AppointmentForm(instance=appointment)
         return render(request, 'appointments/editAppointment.html', {'form': form, 'appointment_id': appointment_id})
 
     else:
@@ -262,7 +258,9 @@ def api_appointment(request, appointment_id):
         appointment = models.Appointment(
             patient=patient,
             doctor=doctor,
-            date=form.get('date')
+            date=form.get('date'),
+            status=form.get('status'),
+            note=form.get('note')
         )
         appointment.save()
         if appointment.id is None:
@@ -288,10 +286,11 @@ def api_appointment(request, appointment_id):
 
             if request.method == 'PUT':
                 form = request.data
-
-                appointment.doctor = form.get('doctor')
-                appointment.patient = form.get('patient')
+                appointment.doctor = models.Doctor.objects.get(id=form.get('doctor'))
+                appointment.patient = models.Patient.objects.get(id=form.get('patient'))
                 appointment.date = form.get('date')
+                appointment.status = form.get('status')
+                appointment.note = form.get('note')
                 appointment.save()
 
                 return Response(status=status.HTTP_200_OK)
