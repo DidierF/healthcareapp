@@ -52,9 +52,8 @@ def patients_view(request, patient_id, new):
         return render(request, 'patients/addPatient.html', {'form': forms.PatientForm()})
 
     elif patient_id:
-        doctor = models.Doctor.objects.get(user=request.user)
         patient = models.Patient.objects.get(id=patient_id)
-        appointments = models.Appointment.objects.filter(patient=patient, doctor=doctor)
+        appointments = models.Appointment.objects.filter(patient=patient)
 
         return render(request, 'patients/patientProfile.html', {'patient': patient,
                                                                 'appointments': appointments,
