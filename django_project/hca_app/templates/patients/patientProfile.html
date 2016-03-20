@@ -1,0 +1,38 @@
+{% extends 'base.html' %}
+
+{% block css %}
+{% endblock %}
+
+{% block content %}
+
+<h1>{{ patient.first_name }} {{ patient.last_name }}</h1>
+<a href="/patients/edit/{{ patient.id }}">edit</a>
+
+<div>
+    <h3>Personal Information</h3>
+    <div id="personal_info">
+        <label>Email: {{ patient.email }}</label><br/>
+        <label>Cellphone: {{ patient.cellphone }}</label><br/>
+        <label>Insurance: {{ patient.insurance }}</label><br/>
+    </div>
+
+    <h3>Visits</h3>
+    <div id="visits">
+
+    </div>
+
+    <h3>Appointments</h3>
+    <div id="appointments">
+        {% if appointments %}
+            {% for appointment in appointments %}
+            <a href="/appointments/{{ appointment.id }}">{{ appointment.date }} ({{ appointment.status }})</a><br/>
+            {% endfor %}
+        {% else %}
+            <label>{{ patient.first_name }} {{ patient.last_name }} has no appointments with you.</label>
+        {% endif %}
+    </div>
+</div>
+{% endblock %}
+
+{% block js %}
+{% endblock %}

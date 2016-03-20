@@ -52,12 +52,23 @@ def patients_view(request, patient_id, new):
         return render(request, 'patients/addPatient.html', {'form': forms.PatientForm()})
 
     elif patient_id:
+        doctor = models.Doctor.objects.get(user=request.user)
         patient = models.Patient.objects.get(id=patient_id)
-        form = forms.PatientForm(instance=patient)
-        return render(request, 'patients/editPatient.html', {'form': form, 'patientId': patient_id})
+        appointments = models.Appointment.objects.filter(patient=patient, doctor=doctor)
+
+        return render(request, 'patients/patientProfile.html', {'patient': patient,
+                                                                'appointments': appointments,
+                                                                })
 
     else:
         return render(request, 'patients/patients.html', {'patients': models.Patient.objects.all()})
+
+
+@login_required()
+def patients_edit_view(request, patient_id):
+    patient = models.Patient.objects.get(id=patient_id)
+    form = forms.PatientForm(instance=patient)
+    return render(request, 'patients/editPatient.html', {'form': form, 'patientId': patient_id})
 
 
 @login_required()
