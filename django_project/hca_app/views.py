@@ -82,7 +82,9 @@ def appointments_view(request, appointment_id, new):
         return render(request, 'appointments/editAppointment.html', {'form': form, 'appointment_id': appointment_id})
 
     else:
-        return render(request, 'appointments/appointments.html', {'appointments': models.Appointment.objects.all()})
+        doctor = models.Doctor.objects.get(user=request.user)
+        return render(request, 'appointments/appointments.html',
+                      {'appointments': models.Appointment.objects.filter(doctor=doctor)})
 
 
 @login_required()
