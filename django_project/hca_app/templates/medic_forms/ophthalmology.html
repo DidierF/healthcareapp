@@ -7,9 +7,14 @@
 {% block content %}
 
 <div class="row">
-        {% csrf_token %}
-        <h2 class=""></h2>
-        {% crispy form %}
+    {#% csrf_token %#}
+    <h2 class=""></h2>
+    {% crispy form %}
 </div>
 
+{% endblock %}
+
+{% block js %}
+    {% load staticfiles %}
+    <script src="{% static 'ophthalmology.js' %}"></script>
 {% endblock %}

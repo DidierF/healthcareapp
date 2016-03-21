@@ -1,0 +1,16 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<h1>Choose a form</h1>
+<select class="select">
+
+    {% for form in forms %}
+        <option value="">-----------</option>
+        <option value="{{ form.form }}">{{ form.name }}</option>
+    {% endfor %}
+</select>
+<input id="selectBtn" class="btn btn-primary" type="button" value="Select">
+{% endblock %}
+
+{% block js %}
+{% endblock %}

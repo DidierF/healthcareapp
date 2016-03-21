@@ -54,9 +54,13 @@ def patients_view(request, patient_id, new):
     elif patient_id:
         patient = models.Patient.objects.get(id=patient_id)
         appointments = models.Appointment.objects.filter(patient=patient)
-
+        prescriptions = models.Prescription.objects.filter(appointment__in=appointments)
+        doctor_id = models.Doctor.objects.get(user=request.user).id
         return render(request, 'patients/patientProfile.html', {'patient': patient,
                                                                 'appointments': appointments,
+                                                                'prescriptions': prescriptions,
+                                                                'forms': models.MEDIC_FORM_TYPES,
+                                                                'doctor_id': doctor_id
                                                                 })
 
     else:
@@ -88,11 +92,23 @@ def appointments_view(request, appointment_id, new):
 
 @login_required()
 def medic_form_view(request, form_type):
-    if not form_type:
-        return render(request, 'medic_forms/medic_forms.html')
+    doctor = models.Doctor.objects.get(user=request.user)
+    patient = None
+    if request.GET.get('p'):
+        patient = models.Patient.objects.get(id=request.GET.get('p'))
 
-    elif form_type == 'ophthalmology':
-        return render(request, 'medic_forms/ophthalmology.html', {'form': forms.OphthalmologyForm()})
+    if not form_type:
+        return render(request, 'medic_forms/medic_forms.html', {'forms': models.MEDIC_FORM_TYPES})
+
+    elif form_type == 'OphthalmologyForm':
+        if patient is not None:
+            return render(request, 'medic_forms/ophthalmology.html',
+                          {'form': forms.OphthalmologyForm(initial={'doctor': doctor.id, 'patient': patient.id})
+                           })
+        else:
+            return render(request, 'medic_forms/ophthalmology.html',
+                          {'form': forms.OphthalmologyForm(initial={'doctor': doctor.id})
+                           })
 
 
 # API

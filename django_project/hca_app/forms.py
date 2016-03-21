@@ -68,11 +68,18 @@ class PrescriptionForm(ModelForm):
 
 
 class OphthalmologyForm(ModelForm):
+    patient = ChoiceField(choices=[
+        (pat.id, pat.first_name + ' ' + pat.last_name) for pat in models.Patient.objects.all()
+        ])
+    doctor = ChoiceField(choices=[
+        (doc.id, doc.user.first_name + ' ' + doc.user.last_name) for doc in models.Doctor.objects.all()
+    ])
+
     helper = FormHelper()
     helper.form_method = 'POST'
     helper.from_class = 'ophthalmologyForm'
-    helper.add_input(Button('submitBtn', 'Save',
-                            css_class='btn btn-primary btn btn-lg btn-primary btn-bloc'))
+    helper.add_input(Button('saveBtn', 'Save',
+                            css_class='btn btn-lg btn-primary btn-bloc'))
 
     class Meta:
         model = models.OphthalmologyFormModel

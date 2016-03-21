@@ -8,7 +8,7 @@
 <h1 class="text-capitalize">{{ patient.first_name }} {{ patient.last_name }}</h1>
 <a href="/patients/edit/{{ patient.id }}">edit</a>
 
-<div>
+<div class="container">
     <div id="personal_info" class="col-md-3 col-lg-3">
         <h3>Personal Information</h3>
         <strong>Email:</strong> {{ patient.email }}<br/>
@@ -16,9 +16,31 @@
         <strong>Insurance:</strong> {{ patient.insurance }}<br/>
     </div>
 
-    <div id="forms" class="col-md-9 col-lg-9">
-    <h3>Forms <small><a href="">Add</a></small></h3>
+    <div id="forms" class="col-md-6 col-lg-6">
+        <h3>Forms <small><a id="addForm" href="#">Add</a></small></h3>
+        <input type="hidden" id="doctor_id" value="{{ doctor_id }}">
+        <input type="hidden" id="patient_id" value="{{ patient.id }}">
+        <div id="chooseForm" style="display: none;" class="form-inline">
+            <select id="selectForm" class="form-control input-sm">
 
+                {% for form in forms %}
+                    <option value="">-----------</option>
+                    <option value="{{ form.form }}">{{ form.name }}</option>
+                {% endfor %}
+            </select>
+            <input id="selectBtn" class="btn btn-primary btn-sm" type="button" value="Select">
+        </div>
+    </div>
+
+    <div id="prescriptions" class="col-md-3 col-lg-3">
+        <h3>Prescriptions <small><a href="/prescriptions/new/">Add</a></small></h3>
+        <ul>
+            {% for prescription in prescriptions %}
+                <li><a href="/prescriptions/{{ prescription.id }}/">
+                    {{ prescription.appointment.date }}{{ prescription.treatment }}
+                </a></li>
+            {% endfor %}
+        </ul>
     </div>
 
     <div id="appointments" class="col-md-9 col-lg-9">
@@ -47,4 +69,6 @@
 {% endblock %}
 
 {% block js %}
+{% load staticfiles %}
+<script src="{% static 'patientProfile.js' %}"></script>
 {% endblock %}

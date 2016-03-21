@@ -1,3 +1,5 @@
+from datetime import date
+
 from django.contrib.auth.models import User
 from django.db import models
 
@@ -12,6 +14,11 @@ APPOINTMENT_STATUS = (
     ('cancel', 'Cancelled'),
     ('priority', 'Priority'),
     ('results', 'Results')
+)
+
+MEDIC_FORM_TYPES = (
+    {'name': 'Ophthalmology',
+     'form': 'OphthalmologyForm'},
 )
 
 
@@ -65,13 +72,14 @@ class Prescription(models.Model):
     dosage = models.CharField(max_length=250)
 
 
-class BasicConsultationFormModel(models.Model):
+class BasicVisitFormModel(models.Model):
     patient = models.ForeignKey(Patient, on_delete=models.CASCADE)
-    appointment = models.ForeignKey(Appointment, on_delete=models.CASCADE)
+    doctor = models.ForeignKey(Doctor, on_delete=models.CASCADE, default=2)
+    date = models.DateField(default=date.strftime(date.today(), "%Y-%m-%d"))
     notes = models.CharField(max_length=1000, null=True)
 
 
-class OphthalmologyFormModel(BasicConsultationFormModel):
+class OphthalmologyFormModel(BasicVisitFormModel):
     glasses_right = models.CharField(max_length=20, null=True)
     glasses_left = models.CharField(max_length=20, null=True)
     pupils_right = models.CharField(max_length=20, null=True)
