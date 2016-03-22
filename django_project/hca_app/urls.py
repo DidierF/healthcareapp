@@ -25,4 +25,5 @@ urlpatterns = [
     url(r'^api/v1/patients/([0-9]*)$', views.api_patient),
     url(r'^api/v1/appointments/([0-9]*)$', views.api_appointment),
     url(r'^api/v1/prescriptions/([0-9]*)$', views.api_prescription),
+    url(r'^api/v1/ophthalmology/([0-9]*)$', views.api_ophthalmology)
 ]

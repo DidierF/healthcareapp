@@ -101,7 +101,8 @@ def medic_form_view(request, form_type):
         return render(request, 'medic_forms/medic_forms.html', {'forms': models.MEDIC_FORM_TYPES})
 
     elif form_type == 'OphthalmologyForm':
-        if patient is not None:
+
+        if patient:
             return render(request, 'medic_forms/ophthalmology.html',
                           {'form': forms.OphthalmologyForm(initial={'doctor': doctor.id, 'patient': patient.id})
                            })
@@ -380,3 +381,71 @@ def api_prescription(request, prescription_id):
 
         except models.Prescription.DoesNotExist:
             return Response(status=status.HTTP_404_NOT_FOUND)
+
+
+@api_view(['POST', 'PUT', 'DELETE'])
+def api_ophthalmology(request, form_id):
+    if request.method == 'POST':
+        form = request.data
+        patient = models.Patient.objects.get(id=form.get('patient'))
+        doctor = models.Doctor.objects.get(id=form.get('doctor'))
+
+        ophthalmology = models.OphthalmologyFormModel(
+            patient=patient,
+            doctor=doctor,
+            date=form.get('date'),
+            notes=form.get('notes'),
+            glasses_right=form.get('glasses_right'),
+            glasses_left=form.get('glasses_left'),
+            pupils_right=form.get('pupils_right'),
+            pupils_left=form.get('pupils_left'),
+            refraction_right=form.get('refraction_right'),
+            refraction_left=form.get('refraction_left'),
+        )
+        ophthalmology.save()
+        if ophthalmology.id is None:
+            return Response(status=status.HTTP_400_BAD_REQUEST)
+
+        return Response(status=status.HTTP_201_CREATED)
+
+    # elif request.method == 'GET':
+    #
+    #     if form_id:
+    #         form = models.OphthalmologyFormModel.objects.get(id=form_id)
+    #         # serializer = serializers.PrescriptionSerializer(prescription)
+    #         return Response(serializer.data, status=status.HTTP_200_OK)
+    #
+    #     else:
+    #         prescription = models.Prescription.objects.all()
+    #         serializer = serializers.PrescriptionSerializer(prescription, many=True)
+    #         return Response(serializer.data, status=status.HTTP_200_OK)
+
+    else:
+        try:
+            ophthalmology = models.OphthalmologyFormModel.objects.get(id=form_id)
+
+            if request.method == 'PUT':
+                form = request.data
+
+                ophthalmology.patient = models.Patient.objects.get(id=form.get('patient'))
+                ophthalmology.doctor = models.Doctor.objects.get(id=form.get('doctor'))
+                ophthalmology.treatment = form.get('treatment')
+                ophthalmology.date = form.get('date'),
+                ophthalmology.notes = form.get('notes'),
+                ophthalmology.glasses_right = form.get('glasses_right'),
+                ophthalmology.glasses_left = form.get('glasses_left'),
+                ophthalmology.pupils_right = form.get('pupils_right'),
+                ophthalmology.pupils_left = form.get('pupils_left'),
+                ophthalmology.refraction_right = form.get('refraction_right'),
+                ophthalmology.refraction_left = form.get('refraction_left'),
+                ophthalmology.save()
+
+                return Response(status=status.HTTP_200_OK)
+
+            elif request.method == 'DELETE':
+                ophthalmology.delete()
+                return Response(status=status.HTTP_204_NO_CONTENT)
+
+        except models.OphthalmologyFormModel.DoesNotExist:
+            return Response(status=status.HTTP_404_NOT_FOUND)
+

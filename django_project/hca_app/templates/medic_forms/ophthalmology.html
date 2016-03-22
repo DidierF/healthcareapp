@@ -9,7 +9,9 @@
 <div class="row">
     {#% csrf_token %#}
     <h2 class=""></h2>
-    {% crispy form %}
+    <form id="ophthalmologyForm">
+        {% crispy form %}
+    </form>
 </div>
 
 {% endblock %}
