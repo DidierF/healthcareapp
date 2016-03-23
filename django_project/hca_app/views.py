@@ -95,10 +95,6 @@ def appointments_view(request, appointment_id, new):
 
 @login_required()
 def prescriptions_view(request, prescription_id, new):
-    # TODO: addPrescription js.
-    # TODO: prescription api.
-    # TODO: editPrescription (including delete btn).
-    # TODO: edit prescription style in patients profile.
     if new:
         return render(request, 'prescriptions/addPrescription.html', {'form': forms.PrescriptionForm()})
 
@@ -110,7 +106,7 @@ def prescriptions_view(request, prescription_id, new):
 
     else:
         doctor = models.Doctor.objects.get(user=request.user)
-        appointments = models.Appointment.objects.get(doctor=doctor)
+        appointments = models.Appointment.objects.filter(doctor=doctor)
         return render(request, 'prescriptions/prescriptions.html',
                       {'prescriptions': models.Prescription.objects.filter(appointment__in=appointments)})
 
@@ -498,4 +494,3 @@ def api_ophthalmology(request, form_id):
 
         except models.OphthalmologyFormModel.DoesNotExist:
             return Response(status=status.HTTP_404_NOT_FOUND)
-

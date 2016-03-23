@@ -1,0 +1,20 @@
+{% extends 'base.html' %}
+{% load crispy_forms_tags %}
+
+{% block css %}
+{% endblock %}
+
+{% block content %}
+
+<h1>Edit prescription</h1>
+<input id="prescriptionId" type="hidden" value="{{ prescription_id }}"/>
+<form id="prescriptionForm">
+    {% crispy form %}
+</form>
+<input id="deleteBtn" class="btn btn-danger btn-lg btn-bloc" type="button" value="Delete"/>
+{% endblock %}
+
+{% block js %}
+{% load staticfiles %}
+<script src="{% static 'editPrescription.js' %}"></script>
+{% endblock %}

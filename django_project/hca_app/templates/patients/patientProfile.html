@@ -54,7 +54,7 @@
             <ul>
                 {% for prescription in prescriptions %}
                     <li><a href="/prescriptions/{{ prescription.id }}/">
-                        {{ prescription.appointment.date }}{{ prescription.treatment }}
+                        {{ prescription.appointment.date }}
                     </a></li>
                 {% endfor %}
             </ul>
