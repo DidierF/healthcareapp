@@ -1,6 +1,6 @@
 var url = '/api/v1/patients/'+$('#patientId').val();
 
-$('#saveBtn').on('click', function(){
+$('#button-id-savebtn').on('click', function(){
     $.ajax({
         url: url,
         method: 'put',
