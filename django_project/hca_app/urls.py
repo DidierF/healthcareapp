@@ -15,7 +15,7 @@ urlpatterns = [
     url(r'^patients/([0-9]*?|(new?))/?$', views.patients_view),
     url(r'^patients/edit/([0-9]*)/$', views.patients_edit_view),
     url(r'^appointments/([0-9]*?|(new?))/?$', views.appointments_view),
-    # url(r'^prescriptions/([0-9]*/?|(new/?))$', views.prescriptions_view),
+    url(r'^prescriptions/([0-9]*?|(new?))/?$', views.prescriptions_view),
     url(r'^medic_forms/([a-zA-Z]*?)/?$', views.medic_form_view),
     url(r'^ophthalmology/([0-9]*?|(new?))/?$', views.ophthalmology_view),
 

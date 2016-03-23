@@ -62,6 +62,16 @@ class AppointmentForm(ModelForm):
 
 
 class PrescriptionForm(ModelForm):
+    appointment = ChoiceField(
+        choices=[(appt.id, str(appt.date) + ' (' + appt.patient.first_name + ' ' + appt.patient.last_name + ')')
+                 for appt in models.Appointment.objects.all()])
+
+    helper = FormHelper()
+    helper.form_method = 'POST'
+    helper.from_class = 'prescriptionForm'
+    helper.add_input(Button('saveBtn', 'Save',
+                            css_class='btn btn-lg btn-primary btn-bloc'))
+
     class Meta:
         model = models.Prescription
         fields = '__all__'

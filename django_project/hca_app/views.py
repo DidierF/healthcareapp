@@ -94,6 +94,28 @@ def appointments_view(request, appointment_id, new):
 
 
 @login_required()
+def prescriptions_view(request, prescription_id, new):
+    # TODO: addPrescription js.
+    # TODO: prescription api.
+    # TODO: editPrescription (including delete btn).
+    # TODO: edit prescription style in patients profile.
+    if new:
+        return render(request, 'prescriptions/addPrescription.html', {'form': forms.PrescriptionForm()})
+
+    elif prescription_id:
+        prescription = models.Prescription.objects.get(id=prescription_id)
+        form = forms.PrescriptionForm(instance=prescription)
+        return render(request, 'prescriptions/editPrescription.html',
+                      {'form': form, 'prescription_id': prescription_id})
+
+    else:
+        doctor = models.Doctor.objects.get(user=request.user)
+        appointments = models.Appointment.objects.get(doctor=doctor)
+        return render(request, 'prescriptions/prescriptions.html',
+                      {'prescriptions': models.Prescription.objects.filter(appointment__in=appointments)})
+
+
+@login_required()
 def medic_form_view(request, form_type):
     doctor = models.Doctor.objects.get(user=request.user)
     patient = None

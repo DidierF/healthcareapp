@@ -1,0 +1,18 @@
+{% extends 'base.html' %}
+{% load crispy_forms_tags %}
+
+{% block css %}
+{% endblock %}
+
+{% block content %}
+<h1>New prescription</h1>
+<form id="prescriptionForm">
+    <!--<div>{% csrf_token %}</div>-->
+    {% crispy form %}
+</form>
+{% endblock %}
+
+{% block js %}
+{% load staticfiles %}
+<script src="{% static 'addPrescription.js' %}"></script>
+{% endblock %}
