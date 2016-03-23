@@ -1,6 +1,7 @@
 from django.contrib.auth import authenticate, login as django_login, logout as django_logout
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.models import User
+from django.core.mail import send_mail
 from django.shortcuts import render
 from rest_framework import status
 from rest_framework.decorators import api_view
@@ -427,6 +428,17 @@ def api_prescription(request, prescription_id):
 
         except models.Prescription.DoesNotExist:
             return Response(status=status.HTTP_404_NOT_FOUND)
+
+
+@api_view(['POST'])
+def api_prescription_mail(request):
+    data = request.data
+    if data.get('email'):
+        if send_mail('Prescription', 'This is a test prescription.', 'dgx.health.care.app@gmail.com',
+                     [data.get('email')], fail_silently=False) == 1:
+            return Response(status=status.HTTP_200_OK)
+    else:
+        return Response(status=status.HTTP_400_BAD_REQUEST)
 
 
 @api_view(['POST', 'PUT', 'DELETE'])
