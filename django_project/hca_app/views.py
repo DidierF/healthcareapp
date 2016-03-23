@@ -56,11 +56,14 @@ def patients_view(request, patient_id, new):
         appointments = models.Appointment.objects.filter(patient=patient)
         prescriptions = models.Prescription.objects.filter(appointment__in=appointments)
         doctor_id = models.Doctor.objects.get(user=request.user).id
+        ophthalmology = models.OphthalmologyFormModel.objects.filter(patient=patient)
+
         return render(request, 'patients/patientProfile.html', {'patient': patient,
                                                                 'appointments': appointments,
                                                                 'prescriptions': prescriptions,
-                                                                'forms': models.MEDIC_FORM_TYPES,
-                                                                'doctor_id': doctor_id
+                                                                'form_types': models.MEDIC_FORM_TYPES,
+                                                                'doctor_id': doctor_id,
+                                                                'ophthalmology': ophthalmology
                                                                 })
 
     else:
@@ -110,6 +113,31 @@ def medic_form_view(request, form_type):
             return render(request, 'medic_forms/ophthalmology.html',
                           {'form': forms.OphthalmologyForm(initial={'doctor': doctor.id})
                            })
+
+
+def ophthalmology_view(request, form_id, new):
+    doctor = models.Doctor.objects.get(user=request.user)
+    patient = None
+    if request.GET.get('p'):
+        patient = models.Patient.objects.get(id=request.GET.get('p'))
+
+    if new:
+        if patient:
+            return render(request, 'medic_forms/ophthalmology.html',
+                          {'form': forms.OphthalmologyForm(initial={'doctor': doctor.id, 'patient': patient.id})
+                           })
+
+        else:
+            return render(request, 'medic_forms/ophthalmology.html', {'form': forms.OphthalmologyForm()})
+
+    elif form_id:
+        ophthalmology = models.OphthalmologyFormModel.objects.get(id=form_id)
+        form = forms.OphthalmologyForm(instance=ophthalmology)
+        return render(request, 'medic_forms/ophthalmology.html', {'form': form, 'form_id': form_id})
+
+    # else:
+    #     return render(request, 'medic_forms/ophthalmology.html',
+    #                   {'appointments': models.Appointment.objects.filter()})
 
 
 # API

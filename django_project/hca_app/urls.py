@@ -17,6 +17,7 @@ urlpatterns = [
     url(r'^appointments/([0-9]*?|(new?))/?$', views.appointments_view),
     # url(r'^prescriptions/([0-9]*/?|(new/?))$', views.prescriptions_view),
     url(r'^medic_forms/([a-zA-Z]*?)/?$', views.medic_form_view),
+    url(r'^ophthalmology/([0-9]*?|(new?))/?$', views.ophthalmology_view),
 
     # API
     url(r'^api/v1/login$', views.api_login),
