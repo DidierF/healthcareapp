@@ -13,7 +13,7 @@ class LoginForm(Form):
     helper = FormHelper()
     helper.form_method = 'POST'
     helper.from_class = 'loginForm'
-    helper.add_input(Button('loginBtn', 'Login', css_class='btn btn-primary btn-lg btn-bloc'))
+    helper.add_input(Button('loginBtn', 'Login', css_class='btn btn-primary btn-lg btn-bloc pull-right'))
 
 
 class DoctorForm(ModelForm):
@@ -25,7 +25,7 @@ class DoctorForm(ModelForm):
     helper = FormHelper()
     helper.form_method = 'POST'
     helper.from_class = 'doctorForm'
-    helper.add_input(Button('saveBtn', 'Save', css_class='btn btn-primary btn-lg btn-bloc'))
+    helper.add_input(Button('saveBtn', 'Save', css_class='btn btn-primary btn-lg btn-bloc pull-right'))
 
     class Meta:
         model = User
@@ -36,7 +36,7 @@ class PatientForm(ModelForm):
     helper = FormHelper()
     helper.form_method = 'POST'
     helper.from_class = 'patientForm'
-    helper.add_input(Button('saveBtn', 'Save', css_class='btn btn-primary btn-lg btn-bloc'))
+    helper.add_input(Button('saveBtn', 'Save', css_class='btn btn-primary btn-lg btn-bloc pull-right'))
 
     class Meta:
         model = models.Patient
@@ -54,7 +54,7 @@ class AppointmentForm(ModelForm):
     helper = FormHelper()
     helper.form_method = 'POST'
     helper.from_class = 'appointmentForm'
-    helper.add_input(Button('saveBtn', 'Save', css_class='btn btn-primary btn-lg btn-bloc'))
+    helper.add_input(Button('saveBtn', 'Save', css_class='btn btn-primary btn-lg btn-bloc pull-right'))
 
     class Meta:
         model = models.Appointment
@@ -70,7 +70,7 @@ class PrescriptionForm(ModelForm):
     helper.form_method = 'POST'
     helper.from_class = 'prescriptionForm'
     helper.add_input(Button('saveBtn', 'Save',
-                            css_class='btn btn-lg btn-primary btn-bloc'))
+                            css_class='btn btn-lg btn-primary btn-bloc pull-right'))
 
     class Meta:
         model = models.Prescription
@@ -89,7 +89,7 @@ class OphthalmologyForm(ModelForm):
     helper.form_method = 'POST'
     helper.from_class = 'ophthalmologyForm'
     helper.add_input(Button('saveBtn', 'Save',
-                            css_class='btn btn-lg btn-primary btn-bloc'))
+                            css_class='btn btn-lg btn-primary btn-bloc pull-right'))
 
     class Meta:
         model = models.OphthalmologyFormModel
