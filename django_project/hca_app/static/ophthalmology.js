@@ -2,7 +2,16 @@ $('#button-id-savebtn').on('click', function(){
     var customData = [];
 
     $.each($('.customField'), function(index, value){
-        customData.push({'title':$(this).find(".title").val(), 'content':$(this).find(".content").val()});
+        if($(this).find(".id")){
+            customData.push({'id':$(this).find(".id").val(),
+                             'title':$(this).find(".title").val(),
+                             'content':$(this).find(".content").val()
+                            });
+        } else {
+            customData.push({'title':$(this).find(".title").val(),
+                             'content':$(this).find(".content").val()
+                            });
+        }
     });
     if($('#form_id').length){
         $.ajax({

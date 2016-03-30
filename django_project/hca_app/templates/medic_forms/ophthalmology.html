@@ -29,6 +29,7 @@
     {% for field in custom %}
     $('#button-id-savebtn').parent().parent().before(
         '<div class="customField form-group">' +
+            '<input type="hidden" class="id" value="{{ field.id }}"/>' +
             '<label class="control-label">Title</label>' +
             '<input class="title textinput textInput form-control" type="text" value="{{ field.title }}"/>' +
 

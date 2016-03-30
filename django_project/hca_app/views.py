@@ -510,14 +510,21 @@ def api_ophthalmology(request, form_id):
                 ophthalmology.refraction_left = form.get('refraction_left')
                 ophthalmology.save()
 
-                for element in json.loads(form.get('customData')):
-                    print(element.get('content'))
-                    field = models.OphthalmologyCustomField(
-                        form=ophthalmology,
-                        title=element.get('title'),
-                        content=element.get('content')
-                    )
-                    field.save()
+                # print(form.get('customData'))
+                if form.get('customData'):
+                    for element in json.loads(form.get('customData')):
+                        if element.get('id'):
+                            field = models.OphthalmologyCustomField.objects.get(id=element.get('id'))
+                            field.title = element.get('title')
+                            field.content = element.get('content')
+                            field.save()
+                        else:
+                            field = models.OphthalmologyCustomField(
+                                form=ophthalmology,
+                                title=element.get('title'),
+                                content=element.get('content')
+                            )
+                            field.save()
 
                 return Response(status=status.HTTP_200_OK)
 
