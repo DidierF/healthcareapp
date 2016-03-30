@@ -4,7 +4,10 @@ $('#button-id-savebtn').on('click', function(){
     $.ajax({
         url: url,
         method: 'put',
-        data: $('#prescriptionForm').serialize()
+        data: $('#prescriptionForm').serialize(),
+        beforeSend: function(jqXHR){
+            jqXHR.setRequestHeader('X-CSRFToken',$('input[name=csrfmiddlewaretoken]').val());
+        }
     })
     .done(function(data, textStatus, jqXHR) {
         switch(jqXHR.status){
