@@ -86,3 +86,9 @@ class OphthalmologyFormModel(BasicVisitFormModel):
     pupils_left = models.CharField(max_length=20, null=True)
     refraction_right = models.CharField(max_length=20, null=True)
     refraction_left = models.CharField(max_length=20, null=True)
+
+
+class OphthalmologyCustomField(models.Model):
+    form = models.ForeignKey(OphthalmologyFormModel, on_delete=models.CASCADE)
+    title = models.CharField(max_length=50)
+    content = models.CharField(max_length=500)

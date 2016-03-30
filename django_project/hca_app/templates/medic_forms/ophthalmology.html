@@ -2,6 +2,7 @@
 {% load crispy_forms_tags %}
 
 {% block css %}
+<link rel="stylesheet" href="https://ajax.googleapis.com/ajax/libs/jqueryui/1.11.4/themes/smoothness/jquery-ui.css">
 {% endblock %}
 
 {% block content %}
@@ -12,6 +13,7 @@
     <form id="ophthalmologyForm">
         {% crispy form %}
     </form>
+    <input type="button" id="addFieldBtn" class="btn btn-default btn-lg" value="Add Field"/>
     {% if form_id %}
         <input type="hidden" id="form_id" value="{{ form_id }}"/>
         <input type="button" id="deleteBtn" class="btn-danger btn btn-lg pull-right" value="Delete">
@@ -21,6 +23,24 @@
 {% endblock %}
 
 {% block js %}
-    {% load staticfiles %}
-    <script src="{% static 'ophthalmology.js' %}"></script>
+
+{% if custom %}
+<script type="text/javascript">
+    {% for field in custom %}
+    $('#button-id-savebtn').parent().parent().before(
+        '<div class="customField form-group">' +
+            '<label class="control-label">Title</label>' +
+            '<input class="title textinput textInput form-control" type="text" value="{{ field.title }}"/>' +
+
+            '<label class="control-label">Content</label>' +
+            '<input class="content textinput textInput form-control" type="text" value="{{ field.content }}"/>' +
+        '</div>'
+    );
+    {% endfor %}
+</script>
+{% endif %}
+
+{% load staticfiles %}
+<script src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.11.4/jquery-ui.min.js"></script>
+<script src="{% static 'ophthalmology.js' %}"></script>
 {% endblock %}

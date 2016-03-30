@@ -1,3 +1,5 @@
+import json
+
 from django.contrib.auth import authenticate, login as django_login, logout as django_logout
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.models import User
@@ -152,7 +154,8 @@ def ophthalmology_view(request, form_id, new):
     elif form_id:
         ophthalmology = models.OphthalmologyFormModel.objects.get(id=form_id)
         form = forms.OphthalmologyForm(instance=ophthalmology)
-        return render(request, 'medic_forms/ophthalmology.html', {'form': form, 'form_id': form_id})
+        custom = models.OphthalmologyCustomField.objects.filter(form=ophthalmology)
+        return render(request, 'medic_forms/ophthalmology.html', {'form': form, 'form_id': form_id, 'custom': custom})
 
     # else:
     #     return render(request, 'medic_forms/ophthalmology.html',
@@ -462,6 +465,16 @@ def api_ophthalmology(request, form_id):
         )
         ophthalmology.save()
         if ophthalmology.id is None:
+
+            for element in json.loads(form.get('customData')):
+                print(element.get('content'))
+                field = models.OphthalmologyCustomField(
+                    form=ophthalmology,
+                    title=element.get('title'),
+                    content=element.get('content')
+                )
+                field.save()
+
             return Response(status=status.HTTP_400_BAD_REQUEST)
 
         return Response(status=status.HTTP_201_CREATED)
@@ -487,16 +500,24 @@ def api_ophthalmology(request, form_id):
 
                 ophthalmology.patient = models.Patient.objects.get(id=form.get('patient'))
                 ophthalmology.doctor = models.Doctor.objects.get(id=form.get('doctor'))
-                ophthalmology.treatment = form.get('treatment')
-                ophthalmology.date = form.get('date'),
-                ophthalmology.notes = form.get('notes'),
-                ophthalmology.glasses_right = form.get('glasses_right'),
-                ophthalmology.glasses_left = form.get('glasses_left'),
-                ophthalmology.pupils_right = form.get('pupils_right'),
-                ophthalmology.pupils_left = form.get('pupils_left'),
-                ophthalmology.refraction_right = form.get('refraction_right'),
-                ophthalmology.refraction_left = form.get('refraction_left'),
+                ophthalmology.date = form.get('date')
+                ophthalmology.notes = form.get('notes')
+                ophthalmology.glasses_right = form.get('glasses_right')
+                ophthalmology.glasses_left = form.get('glasses_left')
+                ophthalmology.pupils_right = form.get('pupils_right')
+                ophthalmology.pupils_left = form.get('pupils_left')
+                ophthalmology.refraction_right = form.get('refraction_right')
+                ophthalmology.refraction_left = form.get('refraction_left')
                 ophthalmology.save()
+
+                for element in json.loads(form.get('customData')):
+                    print(element.get('content'))
+                    field = models.OphthalmologyCustomField(
+                        form=ophthalmology,
+                        title=element.get('title'),
+                        content=element.get('content')
+                    )
+                    field.save()
 
                 return Response(status=status.HTTP_200_OK)
 
