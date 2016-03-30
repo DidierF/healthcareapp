@@ -453,8 +453,11 @@ def api_prescription(request, prescription_id):
 @api_view(['POST'])
 def api_prescription_mail(request):
     data = request.data
-    if data.get('email'):
-        if send_mail('Prescription', 'This is a test prescription.', 'dgx.health.care.app@gmail.com',
+    if data.get('email') and data.get('prescription'):
+        prescription = models.Prescription.objects.get(id=data.get('prescription'))
+        content = """Date: %s\nTreatment: %s\nDosage: %s
+        """ % (prescription.appointment.date, prescription.treatment, prescription.dosage)
+        if send_mail('Prescription', content, 'dgx.health.care.app@gmail.com',
                      [data.get('email')], fail_silently=False) == 1:
             return Response(status=status.HTTP_200_OK)
     else:

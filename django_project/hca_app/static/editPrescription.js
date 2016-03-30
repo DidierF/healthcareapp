@@ -47,7 +47,7 @@ $('#sendBtn').on('click', function(){
     $.ajax({
         url: '/api/v1/mail/prescriptions',
         method: 'post',
-        data: 'email=' + $('#email').val(),
+        data: 'email=' + $('#email').val() + '&prescription=' + $('#prescriptionId').val(),
         beforeSend: function(jqXHR){
             jqXHR.setRequestHeader('X-CSRFToken',$('input[name=csrfmiddlewaretoken]').val());
         }
