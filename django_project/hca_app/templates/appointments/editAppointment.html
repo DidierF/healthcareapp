@@ -11,6 +11,8 @@
 <h1>Edit appointment</h1>
 <input id="appointmentId" type="hidden" value="{{ appointment_id }}"/>
 
+<!--<input type="button" id="pdf" class="btn btn-sm btn-default" value="Download PDF">-->
+<a href="/api/v1/pdf/appointments/{{ appointment_id }}" id="pdf" class="btn btn-sm btn-default">Download PDF</a>
 <input type="button" id="emailOpt" class="btn btn-sm btn-default" value="Send email">
 <div id="emailDiv" class="form-inline" style="display:none;">
     <input type="text" id="email" class="form-control input-sm">

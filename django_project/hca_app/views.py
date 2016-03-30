@@ -4,11 +4,14 @@ from django.contrib.auth import authenticate, login as django_login, logout as d
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.models import User
 from django.core.mail import send_mail
+from django.http import HttpResponse
 from django.shortcuts import render
+from reportlab.pdfgen import canvas
 from rest_framework import status
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
 from . import models, forms, serializers
+# from cStringIO import StringIO
 
 
 # Pages
@@ -397,6 +400,34 @@ def api_appointment_mail(request):
             return Response(status=status.HTTP_200_OK)
     else:
         return Response(status=status.HTTP_400_BAD_REQUEST)
+
+
+@api_view(['GET'])
+def api_appointment_pdf(request, appointment):
+    if appointment:
+        start = 750
+        line = 15
+        apt = models.Appointment.objects.get(id=appointment)
+        # Create the HttpResponse object with the appropriate PDF headers.
+        response = HttpResponse(content_type='application/pdf')
+        response['Content-Disposition'] = 'attachment; filename="Appointment.pdf"'
+
+        p = canvas.Canvas(response)
+
+        p.drawString(100, start + 50, 'Appointment', )
+
+        p.drawString(100, start, 'Patient: %s' % apt.patient.first_name + ' ' + apt.patient.last_name)
+        p.drawString(100, start - line, 'Doctor: %s' % apt.doctor.user.first_name + ' ' + apt.doctor.user.last_name)
+        p.drawString(100, start - line * 2,  'Date: %s' % apt.date)
+        p.drawString(100, start - line * 3,  'Status: %s' % apt.status)
+        p.drawString(100, start - line * 4,  'Note: %s' % apt.note)
+
+        p.showPage()
+        p.save()
+        return response
+
+    else:
+        return Response(status=status.HTTP_404_NOT_FOUND)
 
 
 @api_view(['POST', 'GET', 'PUT', 'DELETE'])

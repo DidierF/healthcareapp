@@ -75,3 +75,27 @@ $('#sendBtn').on('click', function(){
         }
     });
 });
+
+//$('#pdf').on('click', function(){
+//    $.ajax({
+//        url: '/api/v1/pdf/appointments',
+//        method: 'get',
+//        async: false,
+//        data: 'appointment=' + $('#appointmentId').val(),
+//        beforeSend: function(jqXHR){
+//            jqXHR.setRequestHeader('X-CSRFToken',$('input[name=csrfmiddlewaretoken]').val());
+//        }
+//    })
+//    .done(function(data, textStatus, jqXHR) {
+//        switch(jqXHR.status){
+//            case 200:
+//                console.log(data);
+//                break;
+//        }
+//    })
+//    .fail(function(jqXHR, textStatus, errorThrown){
+//        if(jqXHR.status == 400){
+//            alert('There was an error.\nPlease try again.');
+//        }
+//    });
+//});
