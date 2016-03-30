@@ -10,6 +10,13 @@
 
 <h1>Edit appointment</h1>
 <input id="appointmentId" type="hidden" value="{{ appointment_id }}"/>
+
+<input type="button" id="emailOpt" class="btn btn-sm btn-default" value="Send email">
+<div id="emailDiv" class="form-inline" style="display:none;">
+    <input type="text" id="email" class="form-control input-sm">
+    <input type="button" id="sendBtn" class="btn btn-sm btn-primary" value="Send">
+</div>
+
 <form id="appointmentForm">
     {% crispy form %}
 </form>

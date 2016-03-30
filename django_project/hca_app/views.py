@@ -382,6 +382,23 @@ def api_appointment(request, appointment_id):
             return Response(status=status.HTTP_404_NOT_FOUND)
 
 
+@api_view(['POST'])
+def api_appointment_mail(request):
+    data = request.data
+    if data.get('email') and data.get('appointment'):
+        apt = models.Appointment.objects.get(id=data.get('appointment'))
+        content = """
+        Patient: %s\nDoctor: %s\nDate: %s\nStatus: %s\nNote: %s
+        """ % (apt.patient.first_name + ' ' + apt.patient.last_name,
+                  apt.doctor.user.first_name + ' ' + apt.doctor.user.last_name,
+                  apt.date, apt.status, apt.note)
+        if send_mail('Appointment', content, 'dgx.health.care.app@gmail.com',
+                     [data.get('email')], fail_silently=False) == 1:
+            return Response(status=status.HTTP_200_OK)
+    else:
+        return Response(status=status.HTTP_400_BAD_REQUEST)
+
+
 @api_view(['POST', 'GET', 'PUT', 'DELETE'])
 def api_prescription(request, prescription_id):
     if request.method == 'POST':
