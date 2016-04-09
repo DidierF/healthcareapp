@@ -24,28 +24,28 @@
         <div class="col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 main">
  			{% if user.is_authenticated %} <h1 class="page-header">Hello, {{ user.first_name }}.</h1>{% endif %}
         	
-          <div class="row placeholders">
-            <div class="col-xs-6 col-sm-3 placeholder">
-              <img src="data:image/gif;base64,R0lGODlhAQABAIAAAHd3dwAAACH5BAAAAAAALAAAAAABAAEAAAICRAEAOw==" width="200" height="200" class="img-responsive" alt="Generic placeholder thumbnail">
-              <h4>Daily Patients</h4>
-              <span class="text-muted">Progress</span>
-            </div>
-            <div class="col-xs-6 col-sm-3 placeholder">
-              <img src="data:image/gif;base64,R0lGODlhAQABAIAAAHd3dwAAACH5BAAAAAAALAAAAAABAAEAAAICRAEAOw==" width="200" height="200" class="img-responsive" alt="Generic placeholder thumbnail">
-              <h4>Canceled Patients</h4>
-              <span class="text-muted">Total amount</span>
-            </div>
-            <div class="col-xs-6 col-sm-3 placeholder">
-              <img src="data:image/gif;base64,R0lGODlhAQABAIAAAHd3dwAAACH5BAAAAAAALAAAAAABAAEAAAICRAEAOw==" width="200" height="200" class="img-responsive" alt="Generic placeholder thumbnail">
-              <h4>Label</h4>
-              <span class="text-muted">Something else</span>
-            </div>
-            <div class="col-xs-6 col-sm-3 placeholder">
-              <img src="data:image/gif;base64,R0lGODlhAQABAIAAAHd3dwAAACH5BAAAAAAALAAAAAABAAEAAAICRAEAOw==" width="200" height="200" class="img-responsive" alt="Generic placeholder thumbnail">
-              <h4>Label</h4>
-              <span class="text-muted">Something else</span>
-            </div>
-          </div>
+          <!--<div class="row placeholders">-->
+            <!--<div class="col-xs-6 col-sm-3 placeholder">-->
+              <!--<img src="data:image/gif;base64,R0lGODlhAQABAIAAAHd3dwAAACH5BAAAAAAALAAAAAABAAEAAAICRAEAOw==" width="200" height="200" class="img-responsive" alt="Generic placeholder thumbnail">-->
+              <!--<h4>Daily Patients</h4>-->
+              <!--<span class="text-muted">Progress</span>-->
+            <!--</div>-->
+            <!--<div class="col-xs-6 col-sm-3 placeholder">-->
+              <!--<img src="data:image/gif;base64,R0lGODlhAQABAIAAAHd3dwAAACH5BAAAAAAALAAAAAABAAEAAAICRAEAOw==" width="200" height="200" class="img-responsive" alt="Generic placeholder thumbnail">-->
+              <!--<h4>Canceled Patients</h4>-->
+              <!--<span class="text-muted">Total amount</span>-->
+            <!--</div>-->
+            <!--<div class="col-xs-6 col-sm-3 placeholder">-->
+              <!--<img src="data:image/gif;base64,R0lGODlhAQABAIAAAHd3dwAAACH5BAAAAAAALAAAAAABAAEAAAICRAEAOw==" width="200" height="200" class="img-responsive" alt="Generic placeholder thumbnail">-->
+              <!--<h4>Label</h4>-->
+              <!--<span class="text-muted">Something else</span>-->
+            <!--</div>-->
+            <!--<div class="col-xs-6 col-sm-3 placeholder">-->
+              <!--<img src="data:image/gif;base64,R0lGODlhAQABAIAAAHd3dwAAACH5BAAAAAAALAAAAAABAAEAAAICRAEAOw==" width="200" height="200" class="img-responsive" alt="Generic placeholder thumbnail">-->
+              <!--<h4>Label</h4>-->
+              <!--<span class="text-muted">Something else</span>-->
+            <!--</div>-->
+          <!--</div>-->
 
           <h2 class="sub-header">Today's agenda</h2>
           <div class="table-responsive">
@@ -60,20 +60,32 @@
                 </tr>
               </thead>
               <tbody>
-                <tr>
-                  <td>1,001</td>
-                  <td>Xavier Páez</td>
-                  <td>Paez Soto</td>
-                  <td>13h-14h</td>
-                  <td>Yes</td>
-                </tr>
-                <tr>
-                  <td>1,002</td>
-                  <td>Francia</td>
-                  <td>Mejia</td>
-                  <td>14h-15h</td>
-                  <td>Canceled</td>
-                </tr>
+              <!--{{ apts }}-->
+              {% for apt in apts %}
+              <tr>
+                  <td>{{ apt.patient.id }}</td>
+                  <td>{{ apt.patient.first_name }}</td>
+                  <td>{{ apt.patient.last_name }}</td>
+                  <td>{{ apt.date }}</td>
+                  <td>{{ apt.status }}</td>
+              </tr>
+              {% endfor %}
+                {% comment %}
+                 <!--<tr>-->
+                  <!--<td>1,001</td>-->
+                  <!--<td>Xavier Páez</td>-->
+                  <!--<td>Paez Soto</td>-->
+                  <!--<td>13h-14h</td>-->
+                  <!--<td>Yes</td>-->
+                <!--</tr>-->
+                <!--<tr>-->
+                  <!--<td>1,002</td>-->
+                  <!--<td>Francia</td>-->
+                  <!--<td>Mejia</td>-->
+                  <!--<td>14h-15h</td>-->
+                  <!--<td>Canceled</td>-->
+                <!--</tr>-->
+                {% endcomment %}
               </tbody>
             </table>
           </div>

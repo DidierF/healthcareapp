@@ -11,7 +11,6 @@ from rest_framework import status
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
 from . import models, forms, serializers
-# from cStringIO import StringIO
 
 
 # Pages
@@ -29,7 +28,9 @@ def login_view(request):
 # Dashboard
 @login_required()
 def dashboard_view(request):
-    return render(request, 'dashboard.html', {'user': request.user})
+    doctor = models.Doctor.objects.get(user=request.user)
+    apts = models.Appointment.objects.filter(doctor=doctor)  # , date=date.today())
+    return render(request, 'dashboard.html', {'user': request.user, 'apts': apts})
 
 
 # Doctors page
