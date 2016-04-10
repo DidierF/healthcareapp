@@ -5,14 +5,10 @@
     <title>Health Care App</title>
 
     {% load staticfiles %}
-    <link rel="stylesheet" type="text/css" href="{% static 'min-css/bootstrap-3.3.6.css' %}"/>
-
+    <link rel="stylesheet" type="text/css" href="{% static 'min-css/bootstrap-3.3.6.min.css' %}"/>
     <link rel="stylesheet" type="text/css" href="{% static 'min-css/navbar-fixed-top.css' %}">
-
     <link rel="stylesheet" type="text/css" href="{% static 'min-css/dashboard.css' %}">
-
     <link rel="stylesheet" type="text/css" href="{% static 'min-css/signin.css' %}">
-
     <link rel="stylesheet" type="text/css" href="{% static 'min-css/formValidation.min.css' %}">
 
     {% block css %}
@@ -52,14 +48,11 @@
     {% block content %}
     {% endblock %}
 </div>
-<script src="https://ajax.googleapis.com/ajax/libs/jquery/2.2.0/jquery.min.js"></script>
 
-<!-- Bootstrap JS -->
-<script src="http://cdn.jsdelivr.net/bootstrap/3.3.2/js/bootstrap.min.js"></script>
-
-<!-- FormValidation plugin and the class supports validating Bootstrap form -->
-<script src="http://formvalidation.io/vendor/formvalidation/js/formValidation.min.js"></script>
-<script src="http://formvalidation.io/vendor/formvalidation/js/framework/bootstrap.min.js"></script>
+<script src="{% static 'jquery-2.2.0.min.js' %}"></script>
+<script src="{% static 'bootstrap-3.3.6.min.js' %}"></script>
+<script src="{% static 'formValidation.min.js' %}"></script>
+<script src="{% static 'formValidation.bootstrap.min.js' %}"></script>
 <script src="{% static 'base.js' %}"></script>
 {% block js %}
 {% endblock %}
