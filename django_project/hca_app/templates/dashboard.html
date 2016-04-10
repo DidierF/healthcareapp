@@ -1,5 +1,12 @@
 {% extends 'base.html' %}
 
+{% block css %}
+<style>
+    .sidebar a { color: #777; }
+    .table a { color: #333; }
+</style>
+{% endblock %}
+
 {% block content %}
 <div class="container-fluid">
     <div class="row">
@@ -40,7 +47,11 @@
                                 {{ apt.patient.first_name }} {{ apt.patient.last_name }}
                             </a>
                         </td>
-                        <td>{{ apt.date }}</td>
+                        <td>
+                            <a href="/appointments/{{ apt.id }}">
+                                {{ apt.date }}
+                            </a>
+                        </td>
                         <td>{{ apt.status }}</td>
                     </tr>
                     {% endfor %}
