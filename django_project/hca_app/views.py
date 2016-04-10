@@ -1,4 +1,5 @@
 import json
+from datetime import date
 
 from django.contrib.auth import authenticate, login as django_login, logout as django_logout
 from django.contrib.auth.decorators import login_required
@@ -29,7 +30,7 @@ def login_view(request):
 @login_required()
 def dashboard_view(request):
     doctor = models.Doctor.objects.get(user=request.user)
-    apts = models.Appointment.objects.filter(doctor=doctor)  # , date=date.today())
+    apts = models.Appointment.objects.filter(doctor=doctor, date__gt=date.today()).order_by('date')
     return render(request, 'dashboard.html', {'user': request.user, 'apts': apts})
 
 
