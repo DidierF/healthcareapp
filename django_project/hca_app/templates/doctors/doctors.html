@@ -8,7 +8,7 @@
 
 <a href="/doctors/new">New Doctor</a><br />
 {% for doctor in doctors %}
-<a href="/doctors/{{ doctor.doctorId }}">{{ doctor.user.username }}</a><br />
+<a href="/doctors/{{ doctor.id }}">{{ doctor.user.username }}</a><br />
 {% endfor %}
 
 {% endblock %}

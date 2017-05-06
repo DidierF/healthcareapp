@@ -1,3 +1,5 @@
+from datetime import date
+
 from django.contrib.auth.models import User
 from django.db import models
 
@@ -7,31 +9,86 @@ USER_TYPES = (
     ('admin', 'Administrator')
 )
 
+APPOINTMENT_STATUS = (
+    ('active', 'Active'),
+    ('cancel', 'Cancelled'),
+    ('priority', 'Priority'),
+    ('results', 'Results')
+)
+
+MEDIC_FORM_TYPES = (
+    {'name': 'Ophthalmology',
+     'form': 'OphthalmologyForm'},
+)
+
 
 # Users table
 class Doctor(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE)
-    doctorId = models.AutoField(primary_key=True)
     document = models.CharField(max_length=20, unique=True)
+    address = models.CharField(max_length=250, null=True)
     cellphone = models.CharField(max_length=10)
-    officePhone = models.CharField(max_length=10)
-    userType = models.CharField(max_length=5, choices=USER_TYPES, default='std')
+    office_phone = models.CharField(max_length=10)
+    user_type = models.CharField(max_length=5, choices=USER_TYPES, default='std')
 
 
 # Patients
 class Patient(models.Model):
-    patientId = models.AutoField(primary_key=True)
-    firstName = models.CharField(max_length=20)
-    lastName = models.CharField(max_length=20)
-    document = models.CharField(max_length=20, unique=True)
+    first_name = models.CharField(max_length=20)
+    last_name = models.CharField(max_length=20)
+    date_of_birth = models.DateField()
+    gender = models.CharField(max_length=1, choices=(('M', 'Male'), ('F', 'Female')))
     email = models.CharField(max_length=50, unique=True)
     address = models.CharField(max_length=250, null=True)
     cellphone = models.CharField(max_length=10)
-    officePhone = models.CharField(max_length=10, null=True)
+    office_phone = models.CharField(max_length=10, null=True)
+    insurance = models.CharField(max_length=50, null=True)
     depends = models.IntegerField(null=True)
+    referred = models.CharField(max_length=50, null=True)
+    allergies = models.CharField(max_length=200, null=True)
+    surgery = models.CharField(max_length=200, null=True)
+    family_history = models.CharField(max_length=200, null=True)
+    other = models.CharField(max_length=200, null=True)
+
+
+# TODO: Change name to 'CustomPatientField'
+class CustomField(models.Model):
+    patient = models.ForeignKey(Patient, on_delete=models.CASCADE)
+    title = models.CharField(max_length=50)
+    content = models.CharField(max_length=500)
 
 
 class Appointment(models.Model):
-    date = models.DateField()
-    doctor = models.ForeignKey(Doctor, on_delete=models.CASCADE)
     patient = models.ForeignKey(Patient, on_delete=models.CASCADE)
+    doctor = models.ForeignKey(Doctor, on_delete=models.CASCADE)
+    date = models.DateField()
+    status = models.CharField(max_length=10, choices=APPOINTMENT_STATUS, default='active')
+    note = models.CharField(max_length=500, null=True)
+
+
+class Prescription(models.Model):
+    appointment = models.ForeignKey(Appointment, on_delete=models.CASCADE)
+    treatment = models.CharField(max_length=100)
+    dosage = models.CharField(max_length=250)
+
+
+class BasicVisitFormModel(models.Model):
+    patient = models.ForeignKey(Patient, on_delete=models.CASCADE)
+    doctor = models.ForeignKey(Doctor, on_delete=models.CASCADE, default=2)
+    date = models.DateField(default=date.strftime(date.today(), "%Y-%m-%d"))
+    notes = models.CharField(max_length=1000, null=True)
+
+
+class OphthalmologyFormModel(BasicVisitFormModel):
+    glasses_right = models.CharField(max_length=20, null=True)
+    glasses_left = models.CharField(max_length=20, null=True)
+    pupils_right = models.CharField(max_length=20, null=True)
+    pupils_left = models.CharField(max_length=20, null=True)
+    refraction_right = models.CharField(max_length=20, null=True)
+    refraction_left = models.CharField(max_length=20, null=True)
+
+
+class OphthalmologyCustomField(models.Model):
+    form = models.ForeignKey(OphthalmologyFormModel, on_delete=models.CASCADE)
+    title = models.CharField(max_length=50)
+    content = models.CharField(max_length=500)

@@ -1,16 +1,17 @@
+import json
+from datetime import date
+
 from django.contrib.auth import authenticate, login as django_login, logout as django_logout
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.models import User
+from django.core.mail import send_mail
+from django.http import HttpResponse
 from django.shortcuts import render
+from reportlab.pdfgen import canvas
 from rest_framework import status
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
 from . import models, forms, serializers
-
-
-# from .forms import LoginForm, DoctorForm, PatientForm
-# from .models import Doctor, Patient, Appointment
-# from .serializers import DoctorSerializer, PatientSerializer
 
 
 # Pages
@@ -28,7 +29,9 @@ def login_view(request):
 # Dashboard
 @login_required()
 def dashboard_view(request):
-    return render(request, 'dashboard.html', {'user': request.user})
+    doctor = models.Doctor.objects.get(user=request.user)
+    apts = models.Appointment.objects.filter(doctor=doctor, date__gt=date.today()).order_by('date')
+    return render(request, 'dashboard.html', {'user': request.user, 'apts': apts})
 
 
 # Doctors page
@@ -38,16 +41,12 @@ def doctors_view(request, doctor_id, new):
         return render(request, 'doctors/register.html', {'form': forms.DoctorForm()})
 
     elif doctor_id:
-        doctor = models.Doctor.objects.get(doctorId=doctor_id)
-        form = forms.DoctorForm(initial={
-            'username': doctor.user.username,
-            'email': doctor.user.email,
-            'first_name': doctor.user.first_name,
-            'last_name': doctor.user.last_name,
+        doctor = models.Doctor.objects.get(id=doctor_id)
+        form = forms.DoctorForm(instance=doctor.user, initial={
             'document': doctor.document,
             'cellphone': doctor.cellphone,
-            'officePhone': doctor.officePhone,
-            'userType': doctor.userType
+            'office_phone': doctor.office_phone,
+            'user_type': doctor.user_type
         })
         return render(request, 'doctors/editDoctor.html', {'form': form, 'doctorId': doctor_id})
 
@@ -61,20 +60,29 @@ def patients_view(request, patient_id, new):
         return render(request, 'patients/addPatient.html', {'form': forms.PatientForm()})
 
     elif patient_id:
-        patient = models.Patient.objects.get(patientId=patient_id)
-        form = forms.PatientForm(initial={
-            'firstName': patient.firstName,
-            'lastName': patient.lastName,
-            'email': patient.email,
-            'document': patient.document,
-            'cellphone': patient.cellphone,
-            'officePhone': patient.officePhone,
-            'address': patient.address
-        })
-        return render(request, 'editPatient.html', {'form': form, 'patientId': patient_id})
+        patient = models.Patient.objects.get(id=patient_id)
+        appointments = models.Appointment.objects.filter(patient=patient)
+        prescriptions = models.Prescription.objects.filter(appointment__in=appointments)
+        doctor_id = models.Doctor.objects.get(user=request.user).id
+        ophthalmology = models.OphthalmologyFormModel.objects.filter(patient=patient)
+
+        return render(request, 'patients/patientProfile.html', {'patient': patient,
+                                                                'appointments': appointments,
+                                                                'prescriptions': prescriptions,
+                                                                'form_types': models.MEDIC_FORM_TYPES,
+                                                                'doctor_id': doctor_id,
+                                                                'ophthalmology': ophthalmology
+                                                                })
 
     else:
         return render(request, 'patients/patients.html', {'patients': models.Patient.objects.all()})
+
+
+@login_required()
+def patients_edit_view(request, patient_id):
+    patient = models.Patient.objects.get(id=patient_id)
+    form = forms.PatientForm(instance=patient)
+    return render(request, 'patients/editPatient.html', {'form': form, 'patientId': patient_id})
 
 
 @login_required()
@@ -84,15 +92,80 @@ def appointments_view(request, appointment_id, new):
 
     elif appointment_id:
         appointment = models.Appointment.objects.get(id=appointment_id)
-        form = forms.AppointmentForm({
-            'doctor': appointment.doctor.doctorId,
-            'patient': appointment.patient.patientId,
-            'date': appointment.date
-        })
+        form = forms.AppointmentForm(instance=appointment)
         return render(request, 'appointments/editAppointment.html', {'form': form, 'appointment_id': appointment_id})
 
     else:
-        return render(request, 'appointments/appointments.html', {'appointments': models.Appointment.objects.all()})
+        doctor = models.Doctor.objects.get(user=request.user)
+        return render(request, 'appointments/appointments.html',
+                      {'appointments': models.Appointment.objects.filter(doctor=doctor)})
+
+
+@login_required()
+def prescriptions_view(request, prescription_id, new):
+    if new:
+        return render(request, 'prescriptions/addPrescription.html', {'form': forms.PrescriptionForm()})
+
+    elif prescription_id:
+        prescription = models.Prescription.objects.get(id=prescription_id)
+        form = forms.PrescriptionForm(instance=prescription)
+        return render(request, 'prescriptions/editPrescription.html',
+                      {'form': form, 'prescription_id': prescription_id})
+
+    else:
+        doctor = models.Doctor.objects.get(user=request.user)
+        appointments = models.Appointment.objects.filter(doctor=doctor)
+        return render(request, 'prescriptions/prescriptions.html',
+                      {'prescriptions': models.Prescription.objects.filter(appointment__in=appointments)})
+
+
+@login_required()
+def medic_form_view(request, form_type):
+    doctor = models.Doctor.objects.get(user=request.user)
+    patient = None
+    if request.GET.get('p'):
+        patient = models.Patient.objects.get(id=request.GET.get('p'))
+
+    if not form_type:
+        return render(request, 'medic_forms/medic_forms.html', {'forms': models.MEDIC_FORM_TYPES})
+
+    elif form_type == 'OphthalmologyForm':
+
+        if patient:
+            return render(request, 'medic_forms/ophthalmology.html',
+                          {'form': forms.OphthalmologyForm(initial={'doctor': doctor.id, 'patient': patient.id})
+                           })
+        else:
+            return render(request, 'medic_forms/ophthalmology.html',
+                          {'form': forms.OphthalmologyForm(initial={'doctor': doctor.id})
+                           })
+
+
+def ophthalmology_view(request, form_id, new):
+    doctor = models.Doctor.objects.get(user=request.user)
+    patient = None
+    if request.GET.get('p'):
+        patient = models.Patient.objects.get(id=request.GET.get('p'))
+
+    if new:
+        if patient:
+            return render(request, 'medic_forms/ophthalmology.html',
+                          {'form': forms.OphthalmologyForm(initial={'doctor': doctor.id, 'patient': patient.id})
+                           })
+
+        else:
+            return render(request, 'medic_forms/ophthalmology.html', {'form': forms.OphthalmologyForm()})
+
+    elif form_id:
+        ophthalmology = models.OphthalmologyFormModel.objects.get(id=form_id)
+        form = forms.OphthalmologyForm(instance=ophthalmology)
+        custom = models.OphthalmologyCustomField.objects.filter(form=ophthalmology)
+        return render(request, 'medic_forms/ophthalmology.html', {'form': form, 'form_id': form_id, 'custom': custom})
+
+    # else:
+    #     return render(request, 'medic_forms/ophthalmology.html',
+    #                   {'appointments': models.Appointment.objects.filter()})
+
 
 # API
 
@@ -130,12 +203,12 @@ def api_doctors(request, doctor_id):
         doc = models.Doctor(user=user,
                             document=form.get('document'),
                             cellphone=form.get('cellphone'),
-                            officePhone=form.get('officePhone'),
-                            userType=form.get('userType', 'std'))
+                            office_phone=form.get('office_phone'),
+                            user_type=form.get('user_type', 'std'))
         user.save()
         doc.save()
 
-        if doc.doctorId is None:
+        if doc.id is None:
             user.delete()
             return Response(status=status.HTTP_400_BAD_REQUEST)
 
@@ -144,7 +217,7 @@ def api_doctors(request, doctor_id):
     elif request.method == 'GET':
         # TODO: return user fields in doctor json
         if doctor_id:
-            doctor = models.Doctor.objects.get(doctorId=doctor_id)
+            doctor = models.Doctor.objects.get(id=doctor_id)
             serializer = serializers.DoctorSerializer(doctor)
             return Response(serializer.data, status=status.HTTP_200_OK)
 
@@ -159,7 +232,7 @@ def api_doctors(request, doctor_id):
 
     else:
         try:
-            doctor = models.Doctor.objects.get(doctorId=doctor_id)
+            doctor = models.Doctor.objects.get(id=doctor_id)
 
             if request.method == 'PUT':
                 form = request.data
@@ -174,8 +247,8 @@ def api_doctors(request, doctor_id):
 
                 doctor.document = form.get('document')
                 doctor.cellphone = form.get('cellphone')
-                doctor.officePhone = form.get('officePhone')
-                doctor.userType = form.get('userType')
+                doctor.office_phone = form.get('office_phone')
+                doctor.userType = form.get('user_type')
 
                 user.save()
                 doctor.save()
@@ -206,17 +279,18 @@ def api_patient(request, patient_id):
     if request.method == 'POST':
         form = request.data
         patient = models.Patient(
-            firstName=form.get('firstName'),
-            lastName=form.get('lastName'),
-            document=form.get('document'),
+            first_name=form.get('first_name'),
+            last_name=form.get('last_name'),
+            date_of_birth=form.get('date_of_birth'),
+            gender=form.get('gender'),
             email=form.get('email'),
             address=form.get('address'),
             cellphone=form.get('cellphone'),
-            officePhone=form.get('officePhone')
+            office_phone=form.get('office_phone')
             # TODO: 'dependsOn' field
         )
         patient.save()
-        if patient.patientId is None:
+        if patient.id is None:
             return Response(status=status.HTTP_400_BAD_REQUEST)
 
         return Response(status=status.HTTP_201_CREATED)
@@ -224,7 +298,7 @@ def api_patient(request, patient_id):
     elif request.method == 'GET':
 
         if patient_id:
-            patient = models.Patient.objects.get(patientId=patient_id)
+            patient = models.Patient.objects.get(id=patient_id)
             serializer = serializers.PatientSerializer(patient)
             return Response(serializer.data, status=status.HTTP_200_OK)
 
@@ -235,17 +309,17 @@ def api_patient(request, patient_id):
 
     else:
         try:
-            patient = models.Patient.objects.get(patientId=patient_id)
+            patient = models.Patient.objects.get(id=patient_id)
 
             if request.method == 'PUT':
                 form = request.data
 
-                patient.firstName = form.get('firstName')
-                patient.lastName = form.get('lastName')
+                patient.first_name = form.get('first_name')
+                patient.last_name = form.get('last_name')
                 patient.email = form.get('email')
                 patient.address = form.get('address')
                 patient.cellphone = form.get('cellphone')
-                patient.officePhone = form.get('officePhone')
+                patient.office_phone = form.get('office_phone')
                 patient.save()
 
                 return Response(status=status.HTTP_200_OK)
@@ -262,13 +336,15 @@ def api_patient(request, patient_id):
 def api_appointment(request, appointment_id):
     if request.method == 'POST':
         form = request.data
-        patient = models.Patient.objects.get(patientId=form.get('patient'))
-        doctor = models.Doctor.objects.get(doctorId=form.get('doctor'))
+        patient = models.Patient.objects.get(id=form.get('patient'))
+        doctor = models.Doctor.objects.get(id=form.get('doctor'))
 
         appointment = models.Appointment(
             patient=patient,
             doctor=doctor,
-            date=form.get('date')
+            date=form.get('date'),
+            status=form.get('status'),
+            note=form.get('note')
         )
         appointment.save()
         if appointment.id is None:
@@ -294,10 +370,11 @@ def api_appointment(request, appointment_id):
 
             if request.method == 'PUT':
                 form = request.data
-
-                appointment.doctor = form.get('doctor')
-                appointment.patient = form.get('patient')
+                appointment.doctor = models.Doctor.objects.get(id=form.get('doctor'))
+                appointment.patient = models.Patient.objects.get(id=form.get('patient'))
                 appointment.date = form.get('date')
+                appointment.status = form.get('status')
+                appointment.note = form.get('note')
                 appointment.save()
 
                 return Response(status=status.HTTP_200_OK)
@@ -307,4 +384,206 @@ def api_appointment(request, appointment_id):
                 return Response(status=status.HTTP_204_NO_CONTENT)
 
         except models.Appointment.DoesNotExist:
+            return Response(status=status.HTTP_404_NOT_FOUND)
+
+
+@api_view(['POST'])
+def api_appointment_mail(request):
+    data = request.data
+    if data.get('email') and data.get('appointment'):
+        apt = models.Appointment.objects.get(id=data.get('appointment'))
+        content = """
+        Patient: %s\nDoctor: %s\nDate: %s\nStatus: %s\nNote: %s
+        """ % (apt.patient.first_name + ' ' + apt.patient.last_name,
+                  apt.doctor.user.first_name + ' ' + apt.doctor.user.last_name,
+                  apt.date, apt.status, apt.note)
+        if send_mail('Appointment', content, 'dgx.health.care.app@gmail.com',
+                     [data.get('email')], fail_silently=False) == 1:
+            return Response(status=status.HTTP_200_OK)
+    else:
+        return Response(status=status.HTTP_400_BAD_REQUEST)
+
+
+@api_view(['GET'])
+def api_appointment_pdf(request, appointment):
+    if appointment:
+        start = 750
+        line = 15
+        apt = models.Appointment.objects.get(id=appointment)
+        # Create the HttpResponse object with the appropriate PDF headers.
+        response = HttpResponse(content_type='application/pdf')
+        response['Content-Disposition'] = 'attachment; filename="Appointment.pdf"'
+
+        p = canvas.Canvas(response)
+
+        p.drawString(100, start + 50, 'Appointment', )
+
+        p.drawString(100, start, 'Patient: %s' % apt.patient.first_name + ' ' + apt.patient.last_name)
+        p.drawString(100, start - line, 'Doctor: %s' % apt.doctor.user.first_name + ' ' + apt.doctor.user.last_name)
+        p.drawString(100, start - line * 2,  'Date: %s' % apt.date)
+        p.drawString(100, start - line * 3,  'Status: %s' % apt.status)
+        p.drawString(100, start - line * 4,  'Note: %s' % apt.note)
+
+        p.showPage()
+        p.save()
+        return response
+
+    else:
+        return Response(status=status.HTTP_404_NOT_FOUND)
+
+
+@api_view(['POST', 'GET', 'PUT', 'DELETE'])
+def api_prescription(request, prescription_id):
+    if request.method == 'POST':
+        form = request.data
+        appointment = models.Appointment.objects.get(id=form.get('appointment'))
+
+        prescription = models.Prescription(
+            appointment=appointment,
+            treatment=form.get('treatment'),
+            dosage=form.get('dosage')
+        )
+        prescription.save()
+        if prescription.id is None:
+            return Response(status=status.HTTP_400_BAD_REQUEST)
+
+        return Response(status=status.HTTP_201_CREATED)
+
+    elif request.method == 'GET':
+
+        if prescription_id:
+            prescription = models.Prescription.objects.get(id=prescription_id)
+            serializer = serializers.PrescriptionSerializer(prescription)
+            return Response(serializer.data, status=status.HTTP_200_OK)
+
+        else:
+            prescription = models.Prescription.objects.all()
+            serializer = serializers.PrescriptionSerializer(prescription, many=True)
+            return Response(serializer.data, status=status.HTTP_200_OK)
+
+    else:
+        try:
+            prescription = models.Prescription.objects.get(id=prescription_id)
+
+            if request.method == 'PUT':
+                form = request.data
+
+                prescription.appointment = models.Appointment.objects.get(id=form.get('appointment'))
+                prescription.treatment = form.get('treatment')
+                prescription.dosage = form.get('dosage')
+                prescription.save()
+
+                return Response(status=status.HTTP_200_OK)
+
+            elif request.method == 'DELETE':
+                prescription.delete()
+                return Response(status=status.HTTP_204_NO_CONTENT)
+
+        except models.Prescription.DoesNotExist:
+            return Response(status=status.HTTP_404_NOT_FOUND)
+
+
+@api_view(['POST'])
+def api_prescription_mail(request):
+    data = request.data
+    if data.get('email') and data.get('prescription'):
+        prescription = models.Prescription.objects.get(id=data.get('prescription'))
+        content = """Date: %s\nTreatment: %s\nDosage: %s
+        """ % (prescription.appointment.date, prescription.treatment, prescription.dosage)
+        if send_mail('Prescription', content, 'dgx.health.care.app@gmail.com',
+                     [data.get('email')], fail_silently=False) == 1:
+            return Response(status=status.HTTP_200_OK)
+    else:
+        return Response(status=status.HTTP_400_BAD_REQUEST)
+
+
+@api_view(['POST', 'PUT', 'DELETE'])
+def api_ophthalmology(request, form_id):
+    if request.method == 'POST':
+        form = request.data
+        patient = models.Patient.objects.get(id=form.get('patient'))
+        doctor = models.Doctor.objects.get(id=form.get('doctor'))
+
+        ophthalmology = models.OphthalmologyFormModel(
+            patient=patient,
+            doctor=doctor,
+            date=form.get('date'),
+            notes=form.get('notes'),
+            glasses_right=form.get('glasses_right'),
+            glasses_left=form.get('glasses_left'),
+            pupils_right=form.get('pupils_right'),
+            pupils_left=form.get('pupils_left'),
+            refraction_right=form.get('refraction_right'),
+            refraction_left=form.get('refraction_left'),
+        )
+        ophthalmology.save()
+        if ophthalmology.id is None:
+
+            for element in json.loads(form.get('customData')):
+                print(element.get('content'))
+                field = models.OphthalmologyCustomField(
+                    form=ophthalmology,
+                    title=element.get('title'),
+                    content=element.get('content')
+                )
+                field.save()
+
+            return Response(status=status.HTTP_400_BAD_REQUEST)
+
+        return Response(status=status.HTTP_201_CREATED)
+
+    # elif request.method == 'GET':
+    #
+    #     if form_id:
+    #         form = models.OphthalmologyFormModel.objects.get(id=form_id)
+    #         # serializer = serializers.PrescriptionSerializer(prescription)
+    #         return Response(serializer.data, status=status.HTTP_200_OK)
+    #
+    #     else:
+    #         prescription = models.Prescription.objects.all()
+    #         serializer = serializers.PrescriptionSerializer(prescription, many=True)
+    #         return Response(serializer.data, status=status.HTTP_200_OK)
+
+    else:
+        try:
+            ophthalmology = models.OphthalmologyFormModel.objects.get(id=form_id)
+
+            if request.method == 'PUT':
+                form = request.data
+
+                ophthalmology.patient = models.Patient.objects.get(id=form.get('patient'))
+                ophthalmology.doctor = models.Doctor.objects.get(id=form.get('doctor'))
+                ophthalmology.date = form.get('date')
+                ophthalmology.notes = form.get('notes')
+                ophthalmology.glasses_right = form.get('glasses_right')
+                ophthalmology.glasses_left = form.get('glasses_left')
+                ophthalmology.pupils_right = form.get('pupils_right')
+                ophthalmology.pupils_left = form.get('pupils_left')
+                ophthalmology.refraction_right = form.get('refraction_right')
+                ophthalmology.refraction_left = form.get('refraction_left')
+                ophthalmology.save()
+
+                # print(form.get('customData'))
+                if form.get('customData'):
+                    for element in json.loads(form.get('customData')):
+                        if element.get('id'):
+                            field = models.OphthalmologyCustomField.objects.get(id=element.get('id'))
+                            field.title = element.get('title')
+                            field.content = element.get('content')
+                            field.save()
+                        else:
+                            field = models.OphthalmologyCustomField(
+                                form=ophthalmology,
+                                title=element.get('title'),
+                                content=element.get('content')
+                            )
+                            field.save()
+
+                return Response(status=status.HTTP_200_OK)
+
+            elif request.method == 'DELETE':
+                ophthalmology.delete()
+                return Response(status=status.HTTP_204_NO_CONTENT)
+
+        except models.OphthalmologyFormModel.DoesNotExist:
             return Response(status=status.HTTP_404_NOT_FOUND)

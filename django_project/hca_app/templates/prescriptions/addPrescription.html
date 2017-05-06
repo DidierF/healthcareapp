@@ -5,13 +5,14 @@
 {% endblock %}
 
 {% block content %}
-<h1>Register</h1>
-<form id="doctorForm">{% csrf_token %}
-  {% crispy form %}
+<h1>New prescription</h1>
+<form id="prescriptionForm">
+    <!--<div>{% csrf_token %}</div>-->
+    {% crispy form %}
 </form>
 {% endblock %}
 
 {% block js %}
 {% load staticfiles %}
-<script  src="{% static 'register.js' %}"></script>
+<script src="{% static 'addPrescription.js' %}"></script>
 {% endblock %}

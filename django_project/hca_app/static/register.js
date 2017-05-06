@@ -1,8 +1,9 @@
-$('#registerBtn').on('click', function(){
+$('#button-id-savebtn').on('click', function(){
+    console.log('register');
     $.ajax({
         url: '/api/v1/doctors/',
         method: 'post',
-        data: $('#registerForm').serialize()
+        data: $('#doctorForm').serialize()
     })
     .done(function( data, textStatus, jqXHR ) {
         console.log(data);

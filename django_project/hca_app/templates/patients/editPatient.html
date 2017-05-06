@@ -1,6 +1,8 @@
 {% extends 'base.html' %}
+{% load crispy_forms_tags %}
 
 {% block css %}
+<link rel="stylesheet" href="https://ajax.googleapis.com/ajax/libs/jqueryui/1.11.4/themes/smoothness/jquery-ui.css">
 {% endblock %}
 
 {% block content %}
@@ -8,15 +10,13 @@
 <input id="patientId" type="hidden" value="{{ patientId }}"/>
 <form id="patientForm">
     <div>{% csrf_token %}</div>
-    {% for field in form %}
-    <div>{{ field.label_tag }} {{ field }}</div>
-    {% endfor %}
+    {% crispy form %}
 </form>
-<input id="saveBtn" type="button" value="Save"/>
-<input id="deleteBtn" type="button" value="Delete"/>
+<input id="deleteBtn" class="btn btn-danger btn-lg btn-bloc pull-right" type="button" value="Delete"/>
 {% endblock %}
 
 {% block js %}
 {% load staticfiles %}
+<script src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.11.4/jquery-ui.min.js"></script>
 <script src="{% static 'editPatient.js' %}"></script>
 {% endblock %}

@@ -1,8 +1,8 @@
 $('#button-id-savebtn').on('click', function(){
     $.ajax({
-        url: '/api/v1/appointments/',
+        url: '/api/v1/prescriptions/',
         method: 'post',
-        data: $('#appointmentForm').serialize()
+        data: $('#prescriptionForm').serialize()
     })
     .done(function(data, textStatus, jqXHR) {
 //        TODO: return appointment id to redirect to its edition page
@@ -11,17 +11,11 @@ $('#button-id-savebtn').on('click', function(){
         console.log(jqXHR);
         switch(jqXHR.status){
             case 201:
-                window.location.href = '/appointments/'
+//                window.location.href = '/appointments/'
+                history.go(-1);
                 break;
             case 400:
                 break;
         }
     });
-});
-
-$( "#id_date" ).datepicker({
-    dateFormat: "yy-mm-dd",
-    minDate: "-100Y",
-    changeMonth: true,
-    changeYear: true
 });

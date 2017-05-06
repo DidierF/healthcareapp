@@ -1,83 +1,64 @@
 {% extends 'base.html' %}
 
+{% block css %}
+<style>
+    .sidebar a { color: #777; }
+    .table a { color: #333; }
+</style>
+{% endblock %}
+
 {% block content %}
 <div class="container-fluid">
-      <div class="row">
+    <div class="row">
         <div class="col-sm-3 col-md-2 sidebar">
-          <ul class="nav nav-sidebar">
-            <li class="active"><a href="#">Overview <span class="sr-only">(current)</span></a></li>
-            <li><a href="#">Appointments</a></li>
-            <li><a href="#">Reports</a></li>
-            <li><a href="#">Patients</a></li>
-          </ul>
-          <ul class="nav nav-sidebar">
-            <li><a href="">New Appointment</a></li>
-            <li><a href="">New Visit</a></li>
-            <li><a href="">Export Record</a></li>
-          </ul>
-          <ul class="nav nav-sidebar">
-            <li><a href=""></a></li>
-            <li><a href=""></a></li>
-            <li><a href=""></a></li>
-          </ul>
+            <ul class="nav nav-sidebar">
+                <li class="active"><a href="/dashboard/">Overview <span class="sr-only">(current)</span></a></li>
+                <li><a href="/appointments/">Appointments</a></li>
+                <li><a href="/patients/">Patients</a></li>
+            </ul>
+            <ul class="nav nav-sidebar">
+                <li><a href="/appointments/new/">New Appointment</a></li>
+                <li><a href="/prescriptions/new/">New Prescription</a></li>
+            </ul>
         </div>
         <div class="col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 main">
- 			{% if user.is_authenticated %} <h1 class="page-header">Hello, {{ user.username }}.</h1>{% endif %}
-        	
-          <div class="row placeholders">
-            <div class="col-xs-6 col-sm-3 placeholder">
-              <img src="data:image/gif;base64,R0lGODlhAQABAIAAAHd3dwAAACH5BAAAAAAALAAAAAABAAEAAAICRAEAOw==" width="200" height="200" class="img-responsive" alt="Generic placeholder thumbnail">
-              <h4>Daily Patients</h4>
-              <span class="text-muted">Progress</span>
-            </div>
-            <div class="col-xs-6 col-sm-3 placeholder">
-              <img src="data:image/gif;base64,R0lGODlhAQABAIAAAHd3dwAAACH5BAAAAAAALAAAAAABAAEAAAICRAEAOw==" width="200" height="200" class="img-responsive" alt="Generic placeholder thumbnail">
-              <h4>Canceled Patients</h4>
-              <span class="text-muted">Total amount</span>
-            </div>
-            <div class="col-xs-6 col-sm-3 placeholder">
-              <img src="data:image/gif;base64,R0lGODlhAQABAIAAAHd3dwAAACH5BAAAAAAALAAAAAABAAEAAAICRAEAOw==" width="200" height="200" class="img-responsive" alt="Generic placeholder thumbnail">
-              <h4>Label</h4>
-              <span class="text-muted">Something else</span>
-            </div>
-            <div class="col-xs-6 col-sm-3 placeholder">
-              <img src="data:image/gif;base64,R0lGODlhAQABAIAAAHd3dwAAACH5BAAAAAAALAAAAAABAAEAAAICRAEAOw==" width="200" height="200" class="img-responsive" alt="Generic placeholder thumbnail">
-              <h4>Label</h4>
-              <span class="text-muted">Something else</span>
-            </div>
-          </div>
+            {% if user.is_authenticated %} <h1 class="page-header">Hello, {{ user.first_name }}.</h1>{% endif %}
 
-          <h2 class="sub-header">Today's agenda</h2>
-          <div class="table-responsive">
-            <table class="table table-striped">
-              <thead>
-                <tr>
-                  <th>Patient #</th>
-                  <th>Name</th>
-                  <th>Last Name</th>
-                  <th>Time</th>
-                  <th>Confirmation</th>
-                </tr>
-              </thead>
-              <tbody>
-                <tr>
-                  <td>1,001</td>
-                  <td>Xavier Páez</td>
-                  <td>Paez Soto</td>
-                  <td>13h-14h</td>
-                  <td>Yes</td>
-                </tr>
-                <tr>
-                  <td>1,002</td>
-                  <td>Francia</td>
-                  <td>Mejia</td>
-                  <td>14h-15h</td>
-                  <td>Canceled</td>
-                </tr>
-              </tbody>
-            </table>
-          </div>
+            <h2 class="sub-header">Agenda</h2>
+            <div class="table-responsive">
+                <table class="table table-striped">
+                    <thead>
+                    <tr>
+                        <th>Patient #</th>
+                        <th>Name</th>
+                        <th>Time</th>
+                        <th>Confirmation</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    {% for apt in apts %}
+
+                    <tr>
+                        <td>
+                            {{ apt.patient.id }}
+                        </td>
+                        <td>
+                            <a href="/patients/{{ apt.patient.id }}">
+                                {{ apt.patient.first_name }} {{ apt.patient.last_name }}
+                            </a>
+                        </td>
+                        <td>
+                            <a href="/appointments/{{ apt.id }}">
+                                {{ apt.date }}
+                            </a>
+                        </td>
+                        <td>{{ apt.status }}</td>
+                    </tr>
+                    {% endfor %}
+                    </tbody>
+                </table>
+            </div>
         </div>
-      </div>
     </div>
+</div>
 {% endblock %}

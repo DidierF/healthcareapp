@@ -1,0 +1,94 @@
+{% extends 'base.html' %}
+
+{% block css %}
+{% endblock %}
+
+{% block content %}
+
+<h1 class="text-capitalize">{{ patient.first_name }} {{ patient.last_name }}</h1>
+<a href="/patients/edit/{{ patient.id }}">edit</a>
+
+<div class="container">
+    <div id="personal_info" class="col-md-3 col-lg-3">
+        <h3>Personal Information</h3>
+        <strong>Email:</strong> {{ patient.email }}<br/>
+        <strong>Cellphone:</strong> {{ patient.cellphone }}<br/>
+        <strong>Insurance:</strong> {{ patient.insurance }}<br/>
+    </div>
+    <div id="right" class="col-md-9 col-lg-9">
+        <div class="row">
+            <div id="forms" class="col-md-8 col-lg-8">
+                <h3>Forms <small><a id="addForm" href="#">Add</a></small></h3>
+                <input type="hidden" id="doctor_id" value="{{ doctor_id }}">
+                <input type="hidden" id="patient_id" value="{{ patient.id }}">
+                <div id="chooseForm" style="display: none;" class="form-inline">
+                    <select id="selectForm" class="form-control input-sm">
+
+                        {% for form in form_types %}
+                            <option value="">-----------</option>
+                            <option value="{{ form.form }}">{{ form.name }}</option>
+                        {% endfor %}
+                    </select>
+                    <input id="selectBtn" class="btn btn-primary btn-sm" type="button" value="Select">
+                </div>
+                <div>
+                    <table class="table table-hover">
+                        <tr>
+                            <th>Date</th>
+                            <th>Type</th>
+                            <th>Doctor</th>
+                        </tr>
+                        {% for form in ophthalmology %}
+                        <tr>
+                            <td><a href="/ophthalmology/{{ form.id }}/">{{ form.date }}</a></td>
+                            <td>Ophthalmology</td>
+                            <td>{{ form.doctor.user.first_name }} {{ form.doctor.user.last_name }}</td>
+                        </tr>
+                        {% endfor %}
+                    </table>
+                </div>
+            </div>
+
+            <div id="prescriptions" class="col-md-4 col-lg-4">
+            <h3>Prescriptions <small><a href="/prescriptions/new/">Add</a></small></h3>
+            <ul>
+                {% for prescription in prescriptions %}
+                    <li><a href="/prescriptions/{{ prescription.id }}/">
+                        {{ prescription.appointment.date }}
+                    </a></li>
+                {% endfor %}
+            </ul>
+        </div>
+        </div>
+        <div class="row">
+            <div id="appointments" class="">
+        <h3>Appointments <small><a href="/appointments/new/">Add</a></small></h3>
+                {% if appointments %}
+                    <table class="table table-hover">
+                        <tr>
+                            <th>Date</th>
+                            <th>Doctor</th>
+                            <th>Status</th>
+                        </tr>
+                        {% for appointment in appointments %}
+                        <tr>
+                            <td> <a href="/appointments/{{ appointment.id }}">{{ appointment.date }}</a> </td>
+                            <td> {{ appointment.doctor.user.first_name }} {{ appointment.doctor.user.last_name }} </td>
+                            <td> {{ appointment.status }} </td>
+                        </tr>
+                        <!--{{ appointment.date }} ({{ appointment.status }})<br/>-->
+                        {% endfor %}
+                    </table>
+                {% else %}
+                    <label>{{ patient.first_name }} {{ patient.last_name }} has no appointments with you.</label>
+                {% endif %}
+        </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block js %}
+{% load staticfiles %}
+<script src="{% static 'patientProfile.js' %}"></script>
+{% endblock %}

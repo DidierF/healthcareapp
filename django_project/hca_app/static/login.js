@@ -1,4 +1,4 @@
-$('#loginBtn').on('click', function(){
+$('#button-id-loginbtn').on('click', function(){
     $.ajax({
         url: '/api/v1/login',
         method: 'post',
@@ -20,3 +20,4 @@ $('#loginBtn').on('click', function(){
         }
     });
 });
+

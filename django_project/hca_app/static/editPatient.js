@@ -1,6 +1,6 @@
 var url = '/api/v1/patients/'+$('#patientId').val();
 
-$('#saveBtn').on('click', function(){
+$('#button-id-savebtn').on('click', function(){
     $.ajax({
         url: url,
         method: 'put',
@@ -40,4 +40,11 @@ $('#deleteBtn').on('click', function(){
                 break;
         }
     });
+});
+
+$( "#id_date_of_birth" ).datepicker({
+    dateFormat: "yy-mm-dd",
+    minDate: "-100Y",
+    changeMonth: true,
+    changeYear: true
 });

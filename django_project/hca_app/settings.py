@@ -9,7 +9,6 @@ https://docs.djangoproject.com/en/1.6/ref/settings/
 """
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
-import django
 
 import os
 BASE_DIR = os.path.dirname(os.path.dirname(__file__))
@@ -26,6 +25,7 @@ DEBUG = True
 
 ALLOWED_HOSTS = []
 
+CRISPY_TEMPLATE_PACK = 'bootstrap3'
 
 # Application definition
 
@@ -37,7 +37,8 @@ INSTALLED_APPS = (
     'django.contrib.contenttypes',
     'django.contrib.sessions',
     'django.contrib.messages',
-    'django.contrib.staticfiles',
+    'django.contrib.staticfiles',  
+    'crispy_forms',
 )
 
 MIDDLEWARE_CLASSES = (
@@ -108,3 +109,11 @@ USE_TZ = True
 STATIC_URL = '/static/'
 
 LOGIN_URL = '/login/'
+
+# Email configuration
+
+EMAIL_HOST = 'smtp.gmail.com'
+EMAIL_HOST_USER = 'dgx.health.care.app@gmail.com'
+EMAIL_HOST_PASSWORD = 'Intec1053821'
+EMAIL_PORT = 587
+EMAIL_USE_TLS = True
